@@ -1,4 +1,5 @@
 [versions]
+jvm = "21"
 agp = "8.13.1"
 kotlin = "2.0.21"
 coreKtx = "1.17.0"
