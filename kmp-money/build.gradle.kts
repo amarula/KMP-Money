@@ -9,8 +9,8 @@ kotlin {
     jvm()
     androidLibrary {
         namespace = "com.amarula.kmp_money"
-        compileSdk = 36
-        minSdk = 24
+        compileSdk = libs.versions.android.sdk.get().toInt()
+        minSdk = libs.versions.android.minSdk.get().toInt()
 
         withJava()
         withHostTestBuilder {}.configure {}
