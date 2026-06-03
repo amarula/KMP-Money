@@ -7,7 +7,7 @@ plugins {
 
 kotlin {
     jvm()
-    androidLibrary {
+    android {
         namespace = "com.amarula.kmp_money"
         compileSdk = libs.versions.android.sdk.get().toInt()
         minSdk = libs.versions.android.minSdk.get().toInt()

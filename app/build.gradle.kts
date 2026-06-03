@@ -1,14 +1,14 @@
+import com.android.build.api.dsl.ApplicationExtension
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
 }
 
-android {
+configure<ApplicationExtension> {
     namespace = "com.amarula.kmp_money"
     compileSdk {
         version = release(libs.versions.android.sdk.get().toInt())
@@ -42,7 +42,7 @@ android {
     }
 }
 
-tasks.withType<KotlinCompile> {
+tasks.withType<KotlinCompile>().configureEach {
     compilerOptions {
         jvmTarget.set(JvmTarget.fromTarget(libs.versions.jvm.get()))
     }
