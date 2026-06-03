@@ -1,51 +1,38 @@
-import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.multiplatform)
+    alias(libs.plugins.android.kotlin.multiplatform.library)
 }
 
-android {
-    namespace = "com.amarula.kmp_money"
-    compileSdk {
-        version = release(36)
-    }
-
-    defaultConfig {
+kotlin {
+    jvm()
+    androidLibrary {
+        namespace = "com.amarula.kmp_money"
+        compileSdk = 36
         minSdk = 24
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        consumerProguardFiles("consumer-rules.pro")
-    }
+        withJava()
+        withHostTestBuilder {}.configure {}
+        withDeviceTestBuilder {
+            sourceSetTreeName = "test"
+        }
 
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+        compilerOptions {
+            jvmTarget = JvmTarget.fromTarget(libs.versions.jvm.get())
         }
     }
-    compileOptions {
-        sourceCompatibility = JavaVersion.toVersion(libs.versions.jvm.get())
-        targetCompatibility = JavaVersion.toVersion(libs.versions.jvm.get())
-    }
-}
 
-tasks.withType<KotlinCompile> {
-    compilerOptions {
-        jvmTarget.set(JvmTarget.fromTarget(libs.versions.jvm.get()))
-    }
-}
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
 
-dependencies {
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.material)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    sourceSets {
+        commonMain.dependencies {
+        }
+
+        commonTest.dependencies {
+            implementation(libs.kotlin.test)
+        }
+    }
 }
