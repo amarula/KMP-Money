@@ -2,7 +2,7 @@
 jvm = "21"
 android-sdk = "36"
 android-minSdk = "24"
-agp = "8.13.1"
+agp = "9.2.1"
 kotlin = "2.3.21"
 coreKtx = "1.17.0"
 junit = "4.13.2"
