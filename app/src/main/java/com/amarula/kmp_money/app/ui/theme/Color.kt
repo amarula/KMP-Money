@@ -1,4 +1,4 @@
-package com.amarula.kmp_money.ui.theme
+package com.amarula.kmp_money.app.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
