@@ -1,4 +1,4 @@
-package com.amarula.kmp_money.app
+package com.amarula.kmp_money.example
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -10,7 +10,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.ui.Modifier
 import com.amarula.kmp_money.KmpMoney
-import com.amarula.kmp_money.app.ui.theme.KMPMoneyTheme
+import com.amarula.kmp_money.example.ui.theme.KMPMoneyTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

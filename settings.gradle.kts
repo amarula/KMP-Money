@@ -20,5 +20,5 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "KMP-Money"
-include(":app")
+include(":example")
 include(":kmp-money")

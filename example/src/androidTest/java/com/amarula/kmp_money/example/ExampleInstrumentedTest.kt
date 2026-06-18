@@ -1,4 +1,4 @@
-package com.amarula.kmp_money.app
+package com.amarula.kmp_money.example
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
