@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "ab97fe59_0abb10ec",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1037987
+      },
+      "writtenOn": "2026-06-22T08:32:19Z",
+      "side": 1,
+      "message": "@ronnieotienotv2020@gmail.com This commit message need to be fixed",
+      "revId": "e9df4688e2f239b8faaa82119e4f6790e5e4e9a6",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
