@@ -2,21 +2,16 @@ package com.amarula.kmp_money
 
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import com.ionspin.kotlin.bignum.decimal.RoundingMode
-import com.ionspin.kotlin.bignum.decimal.toBigDecimal
 
 /**
  * A Kotlin Multiplatform-compatible immutable monetary amount class using IonSpin's BigDecimal.
  */
 data class KmpMoney(private val amount: BigDecimal, val currency: Currency) : Comparable<KmpMoney> {
 
-    fun toMoneyString(): String {
-        val amount = this.number.formatMoney(currency.decimalPlaces)
-        val currencyCode = currency.name
-        return if (currency.symbolIsPrefix) {
-            "$currencyCode $amount"
-        } else {
-            "$amount $currencyCode"
-        }
+    fun toMoneyString(groupingSeparator: Char = ','): String {
+        val formatted = this.number.formatMoney(currency.decimalPlaces, groupingSeparator)
+        val symbol = currency.currencySymbol.ifEmpty { currency.name }
+        return if (currency.symbolIsPrefix) "$symbol $formatted" else "$formatted $symbol"
     }
 
     fun add(other: KmpMoney): KmpMoney {
@@ -26,12 +21,18 @@ data class KmpMoney(private val amount: BigDecimal, val currency: Currency) : Co
 
     val numberStrippedString: String
         get() {
-            val rounded =
-                amount.roundToDigitPositionAfterDecimalPoint(
-                    currency.decimalPlaces.toLong(),
-                    RoundingMode.ROUND_HALF_CEILING
-                )
-            return rounded.toPlainString()
+            val rounded = amount.roundToDigitPositionAfterDecimalPoint(
+                currency.decimalPlaces.toLong(),
+                RoundingMode.ROUND_HALF_AWAY_FROM_ZERO
+            )
+            val plain = rounded.toPlainString()
+            if (currency.decimalPlaces == 0) return plain
+            return if ('.' in plain) {
+                val parts = plain.split(".")
+                "${parts[0]}.${parts[1].padEnd(currency.decimalPlaces, '0')}"
+            } else {
+                "$plain.${"0".repeat(currency.decimalPlaces)}"
+            }
         }
 
     val numberStripped: BigDecimal
@@ -53,7 +54,7 @@ data class KmpMoney(private val amount: BigDecimal, val currency: Currency) : Co
         }
     }
 
-    override fun toString(): String = "${currency.name} $amount"
+    override fun toString(): String = "${currency.name} ${amount.toPlainString()}"
 
     companion object {
         fun of(amount: String, currency: Currency): KmpMoney {
@@ -61,7 +62,7 @@ data class KmpMoney(private val amount: BigDecimal, val currency: Currency) : Co
         }
 
         fun of(amount: Number, currency: Currency): KmpMoney {
-            return KmpMoney(amount.toDouble().toBigDecimal(), currency)
+            return KmpMoney(BigDecimal.parseString(amount.toString()), currency)
         }
 
         fun of(amount: String, currency: String): KmpMoney {
@@ -73,35 +74,40 @@ data class KmpMoney(private val amount: BigDecimal, val currency: Currency) : Co
         fun of(amount: Number, currency: String): KmpMoney {
             val curr = Currency.fromName(currency)
                 ?: Currency.UNKNOWN
-            return KmpMoney(amount.toDouble().toBigDecimal(), curr)
+            return KmpMoney(BigDecimal.parseString(amount.toString()), curr)
         }
     }
 
-    private fun BigDecimal.formatMoney(fractionDigits: Int = 2): String {
+    private fun BigDecimal.formatMoney(
+        fractionDigits: Int = 2,
+        groupingSeparator: Char = ','
+    ): String {
         val scaled = this.roundToDigitPositionAfterDecimalPoint(
             fractionDigits.toLong(),
             RoundingMode.ROUND_HALF_AWAY_FROM_ZERO
         )
-
         val plain = scaled.toPlainString()
+        val isNegative = plain.startsWith("-")
+        val absPlain = if (isNegative) plain.substring(1) else plain
 
-        val parts = plain.split(".")
+        val parts = absPlain.split(".")
         val integerPart = parts[0]
         val fractionPart = if (parts.size > 1) parts[1] else ""
 
         val grouped = buildString {
             val chars = integerPart.reversed()
             for ((i, c) in chars.withIndex()) {
-                if (i > 0 && i % 3 == 0) append(',')
+                if (i > 0 && i % 3 == 0) append(groupingSeparator)
                 append(c)
             }
         }.reversed()
 
-        return if (fractionDigits > 0) {
+        val result = if (fractionDigits > 0) {
             val frac = fractionPart.padEnd(fractionDigits, '0').take(fractionDigits)
             "$grouped.$frac"
         } else {
             grouped
         }
+        return if (isNegative) "-$result" else result
     }
 }
