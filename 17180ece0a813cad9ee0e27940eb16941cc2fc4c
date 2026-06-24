@@ -1,0 +1,27 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "b5ec5bfe_9976fb72",
+        "filename": "kmp-money/src/commonMain/kotlin/com/amarula/kmp_money/Currency.kt",
+        "patchSetId": 1
+      },
+      "lineNbr": 109,
+      "author": {
+        "id": 1039648
+      },
+      "writtenOn": "2026-06-24T09:09:47Z",
+      "side": 1,
+      "message": "@ronnieotienotv2020@gmail.com Please add KDoc for each new added class, especially if it will be \"public faced\".",
+      "range": {
+        "startLine": 109,
+        "startChar": 11,
+        "endLine": 109,
+        "endChar": 19
+      },
+      "revId": "17180ece0a813cad9ee0e27940eb16941cc2fc4c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
