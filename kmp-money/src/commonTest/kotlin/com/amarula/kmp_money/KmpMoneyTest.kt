@@ -1,6 +1,7 @@
 package com.amarula.kmp_money
 
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
+import com.ionspin.kotlin.bignum.decimal.RoundingMode
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -211,6 +212,233 @@ class KmpMoneyTest {
         assertFailsWith<IllegalArgumentException> {
             KmpMoney.of("1.00", Currency.USD).compareTo(KmpMoney.of("1.00", Currency.EUR))
         }
+    }
+
+    // ── subtract ──────────────────────────────────────────────────────────────
+
+    @Test
+    fun `subtract returns difference`() {
+        val a = KmpMoney.of("10.00", Currency.USD)
+        val b = KmpMoney.of("3.25", Currency.USD)
+        assertEquals("6.75", a.subtract(b).numberStrippedString)
+    }
+
+    @Test
+    fun `subtract with negative result`() {
+        assertEquals(
+            "-2.00",
+            KmpMoney.of("3.00", Currency.USD)
+                .subtract(KmpMoney.of("5.00", Currency.USD)).numberStrippedString
+        )
+    }
+
+    @Test
+    fun `subtract throws on currency mismatch`() {
+        assertFailsWith<IllegalArgumentException> {
+            KmpMoney.of("5.00", Currency.USD).subtract(KmpMoney.of("1.00", Currency.EUR))
+        }
+    }
+
+    // ── multiply ──────────────────────────────────────────────────────────────
+
+    @Test
+    fun `multiply by Int`() {
+        assertEquals("30.00", KmpMoney.of("10.00", Currency.USD).multiply(3).numberStrippedString)
+    }
+
+    @Test
+    fun `multiply by Double`() {
+        assertEquals("15.00", KmpMoney.of("10.00", Currency.USD).multiply(1.5).numberStrippedString)
+    }
+
+    @Test
+    fun `multiply by BigDecimal`() {
+        assertEquals(
+            "15.00",
+            KmpMoney.of("10.00", Currency.USD)
+                .multiply(BigDecimal.parseString("1.5")).numberStrippedString
+        )
+    }
+
+    @Test
+    fun `multiply by zero gives zero`() {
+        assertTrue(KmpMoney.of("99.99", Currency.USD).multiply(0).isNegativeOrZero())
+    }
+
+    @Test
+    fun `multiply preserves currency`() {
+        assertEquals(Currency.GBP, KmpMoney.of("10.00", Currency.GBP).multiply(2).currency)
+    }
+
+    // ── divide ────────────────────────────────────────────────────────────────
+
+    @Test
+    fun `divide by Int rounds to currency scale`() {
+        assertEquals("3.33", KmpMoney.of("10.00", Currency.USD).divide(3).numberStrippedString)
+    }
+
+    @Test
+    fun `divide by BigDecimal`() {
+        assertEquals(
+            "5.00",
+            KmpMoney.of("10.00", Currency.USD)
+                .divide(BigDecimal.parseString("2")).numberStrippedString
+        )
+    }
+
+    @Test
+    fun `divide with explicit CEILING rounding`() {
+        assertEquals(
+            "3.34",
+            KmpMoney.of("10.00", Currency.USD).divide(3, RoundingMode.CEILING).numberStrippedString
+        )
+    }
+
+    @Test
+    fun `divide preserves currency`() {
+        assertEquals(Currency.EUR, KmpMoney.of("9.00", Currency.EUR).divide(3).currency)
+    }
+
+    // ── negate ────────────────────────────────────────────────────────────────
+
+    @Test
+    fun `negate flips positive to negative`() {
+        assertEquals("-10.00", KmpMoney.of("10.00", Currency.USD).negate().numberStrippedString)
+    }
+
+    @Test
+    fun `negate flips negative to positive`() {
+        assertEquals("5.00", KmpMoney.of("-5.00", Currency.USD).negate().numberStrippedString)
+    }
+
+    @Test
+    fun `negate of zero stays zero`() {
+        assertTrue(KmpMoney.of("0", Currency.USD).negate().isNegativeOrZero())
+    }
+
+    // ── abs ───────────────────────────────────────────────────────────────────
+
+    @Test
+    fun `abs of negative returns positive`() {
+        assertEquals("7.50", KmpMoney.of("-7.50", Currency.USD).abs().numberStrippedString)
+    }
+
+    @Test
+    fun `abs of positive is unchanged`() {
+        assertEquals("7.50", KmpMoney.of("7.50", Currency.USD).abs().numberStrippedString)
+    }
+
+    // ── remainder ─────────────────────────────────────────────────────────────
+
+    @Test
+    fun `remainder(BigDecimal) returns modulo`() {
+        assertEquals(
+            "1.00",
+            KmpMoney.of("10.00", Currency.USD)
+                .remainder(BigDecimal.parseString("3")).numberStrippedString
+        )
+    }
+
+    @Test
+    fun `remainder(Number) overload`() {
+        assertEquals("1.50", KmpMoney.of("10.50", Currency.USD).remainder(3).numberStrippedString)
+    }
+
+    // ── allocate ──────────────────────────────────────────────────────────────
+
+    @Test
+    fun `allocate splits evenly`() {
+        val parts = KmpMoney.of("10.00", Currency.USD).allocate(listOf(1, 2, 1))
+        assertEquals("2.50", parts[0].numberStrippedString)
+        assertEquals("5.00", parts[1].numberStrippedString)
+        assertEquals("2.50", parts[2].numberStrippedString)
+    }
+
+    @Test
+    fun `allocate loses no pennies on uneven split`() {
+        val total = KmpMoney.of("10.01", Currency.USD)
+        val parts = total.allocate(listOf(1, 1, 1))
+        val minorSum = parts.sumOf {
+            it.number.multiply(BigDecimal.parseString("100")).longValue(exactRequired = false)
+        }
+        assertEquals(1001L, minorSum)
+        // First slot gets the extra penny
+        assertEquals("3.34", parts[0].numberStrippedString)
+        assertEquals("3.34", parts[1].numberStrippedString)
+        assertEquals("3.33", parts[2].numberStrippedString)
+    }
+
+    @Test
+    fun `allocate handles negative total`() {
+        val parts = KmpMoney.of("-9.00", Currency.USD).allocate(listOf(1, 2))
+        assertEquals("-3.00", parts[0].numberStrippedString)
+        assertEquals("-6.00", parts[1].numberStrippedString)
+    }
+
+    @Test
+    fun `allocate throws on empty ratios`() {
+        assertFailsWith<IllegalArgumentException> {
+            KmpMoney.of("10.00", Currency.USD).allocate(emptyList())
+        }
+    }
+
+    @Test
+    fun `allocate throws on negative ratio`() {
+        assertFailsWith<IllegalArgumentException> {
+            KmpMoney.of("10.00", Currency.USD).allocate(listOf(1, -1))
+        }
+    }
+
+    @Test
+    fun `allocate throws when all ratios sum to zero`() {
+        assertFailsWith<IllegalArgumentException> {
+            KmpMoney.of("10.00", Currency.USD).allocate(listOf(0, 0))
+        }
+    }
+
+    // ── operator overloads ────────────────────────────────────────────────────
+
+    @Test
+    fun `plus operator delegates to add`() {
+        assertEquals(
+            "15.00",
+            (KmpMoney.of("10.00", Currency.USD) + KmpMoney.of(
+                "5.00",
+                Currency.USD
+            )).numberStrippedString
+        )
+    }
+
+    @Test
+    fun `minus operator delegates to subtract`() {
+        assertEquals(
+            "5.00",
+            (KmpMoney.of("10.00", Currency.USD) - KmpMoney.of(
+                "5.00",
+                Currency.USD
+            )).numberStrippedString
+        )
+    }
+
+    @Test
+    fun `times operator with Number`() {
+        assertEquals("20.00", (KmpMoney.of("10.00", Currency.USD) * 2).numberStrippedString)
+    }
+
+    @Test
+    fun `times operator with BigDecimal`() {
+        assertEquals(
+            "25.00",
+            (KmpMoney.of(
+                "10.00",
+                Currency.USD
+            ) * BigDecimal.parseString("2.5")).numberStrippedString
+        )
+    }
+
+    @Test
+    fun `unaryMinus operator delegates to negate`() {
+        assertEquals("-10.00", (-KmpMoney.of("10.00", Currency.USD)).numberStrippedString)
     }
 
     // ── toString ──────────────────────────────────────────────────────────────
