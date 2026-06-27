@@ -13,7 +13,7 @@ String dslScript = """
                 scm {
                      git {
                          remote {
-                             url("https://panicking@gerrithub.io/a/amarula/KMP-Money")
+                             url("https://gerrithub.io/a/amarula/KMP-Money")
                              credentials("gerrithub")
                          }
                          branch('${GERRIT_REFSPEC}')
@@ -67,7 +67,7 @@ node('android-build') {
     def credentials = 'gerrithub'
     env.JENKINS_GERRIT_REST_API_CREDENTIAL_ID = 'gerrithub'
     env.GERRIT_HOST = 'gerrithub.io'
-    env.GERRIT_USER_NAME = 'panicking'
+    env.GERRIT_USER_NAME = 'amarula-git'
     def ver = new Verification(this, env, credentials)
 
     final def dockerImage = 'mobile-app:1.19'
