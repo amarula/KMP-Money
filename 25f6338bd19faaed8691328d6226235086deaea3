@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "648e7ee0_710d370e",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 2
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1037987
+      },
+      "writtenOn": "2026-06-27T07:01:33Z",
+      "side": 1,
+      "message": "@ronnieotienotv2020@gmail.com The patches are not building. Check your error in jenkins. https://jenkins.amarulasolutions.com/job/amarula/job/amarula-internal/job/amarulaLibrary/job/kmpMoneyVerifier/",
+      "revId": "25f6338bd19faaed8691328d6226235086deaea3",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
