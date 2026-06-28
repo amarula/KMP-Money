@@ -4,65 +4,7 @@
 import com.amarula.Common
 import com.amarula.build.Verification
 
-String dslScript = """
-    pipelineJob("amarula/amarula-internal/amarulaLibrary/kmpMoneyVerifier") {
-        description("KMP Money Verification Job")
-        keepDependencies(false)
-        definition {
-            cpsScm {
-                scm {
-                     git {
-                         remote {
-                             url("https://gerrithub.io/a/amarula/KMP-Money")
-                             credentials("gerrithub")
-                         }
-                         branch('${GERRIT_REFSPEC}')
-                     }
-                }
-                scriptPath(".jenkins/kmpMoneyVerification.jenkinsfile")
-                lightweight()
-            }
-        }
-        disabled(false)
-        logRotator {
-            numToKeep(30)
-            daysToKeep(30)
-        }
-        properties {
-            pipelineTriggers {
-                triggers {
-                    gerrit {
-                        serverName('Gerrit Hub')
-                        triggerOnEvents {
-                            patchsetCreated {
-                                excludeNoCodeChange(true)
-                                excludeTrivialRebase(true)
-                                excludeDrafts(true)
-                                excludeWipState(true)
-                            }
-                        }
-                        gerritProjects {
-                            gerritProject {
-                                compareType('ANT')
-                                pattern('amarula/KMP-Money')
-                                branches {
-                                    branch {
-                                        compareType('ANT')
-                                        pattern('**')
-                                    }
-                                }
-                                disableStrictForbiddenFileVerification(false)
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-"""
-
 node('android-build') {
-    jobDsl scriptText: dslScript, ignoreExisting: true
     def repoUrl = 'https://gerrithub.io/a/amarula/KMP-Money'
     def credentials = 'gerrithub'
     env.JENKINS_GERRIT_REST_API_CREDENTIAL_ID = 'gerrithub'
