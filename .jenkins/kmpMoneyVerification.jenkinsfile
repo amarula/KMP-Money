@@ -66,7 +66,6 @@ node('android-build') {
     def repoUrl = 'https://gerrithub.io/a/amarula/KMP-Money'
     def credentials = 'gerrithub'
     env.JENKINS_GERRIT_REST_API_CREDENTIAL_ID = 'gerrithub'
-    env.GERRIT_HOST = 'gerrithub.io'
     env.GERRIT_USER_NAME = 'amarula-git'
     env.GERRIT_MESSAGE_ON_FAIL = '1'
     def ver = new Verification(this, env, credentials)
