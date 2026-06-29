@@ -1,4 +1,4 @@
-package com.amarula.kmp_money.example
+package com.amarula.kmpMoney.example
 
 import org.junit.Assert
 import org.junit.Test
