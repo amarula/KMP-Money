@@ -82,6 +82,20 @@ node('android-build') {
                         export isCIServer=true;
                         ./gradlew clean build -x check --stacktrace
                     '''
+                },
+                'Test': {
+                    try {
+                        sh '''#!/bin/bash -il
+                            ./gradlew allTests
+                        '''
+                    } finally {
+                        String testFolder = "**/build/reports/tests/allTest"
+                        archiveArtifacts artifacts: "${testFolder}/index.html", allowEmptyArchive: true
+                        junit "**/build/test-results/jvmTest/*.xml"
+                        String testReportFile = 'test-reports.tar.gz'
+                        sh "find . -path '${testFolder}' -print0 | xargs -0 tar -czvf ${testReportFile}"
+                        archiveArtifacts testReportFile
+                    }
                 }
             ], options)
         }
