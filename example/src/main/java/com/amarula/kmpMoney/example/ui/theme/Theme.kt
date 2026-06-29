@@ -1,4 +1,4 @@
-package com.amarula.kmp_money.example.ui.theme
+package com.amarula.kmpMoney.example.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

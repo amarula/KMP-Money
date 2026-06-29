@@ -9,7 +9,7 @@ plugins {
 }
 
 configure<ApplicationExtension> {
-    namespace = "com.amarula.kmp_money.example"
+    namespace = "com.amarula.kmpMoney.example"
     compileSdk {
         version = release(libs.versions.android.sdk.get().toInt())
     }

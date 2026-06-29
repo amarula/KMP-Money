@@ -1,4 +1,4 @@
-package com.amarula.kmp_money
+package com.amarula.kmpMoney
 
 import kotlin.test.Test
 import kotlin.test.assertEquals

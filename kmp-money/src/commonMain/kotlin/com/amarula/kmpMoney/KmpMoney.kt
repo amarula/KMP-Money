@@ -1,4 +1,4 @@
-package com.amarula.kmp_money
+package com.amarula.kmpMoney
 
 class KmpMoney {
     fun greetings(): String = "Hello from money"
