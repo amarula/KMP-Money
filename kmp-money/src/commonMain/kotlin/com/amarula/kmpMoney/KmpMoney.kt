@@ -340,6 +340,27 @@ data class KmpMoney(private val amount: BigDecimal, val currency: Currency) : Co
         return this.amount.compareTo(other.amount) == 0
     }
 
+    /**
+     * Returns `true` if this amount is strictly between [min] and [max] (exclusive).
+     *
+     * @throws IllegalArgumentException if [min] or [max] has a different currency.
+     */
+    fun isBetween(min: KmpMoney, max: KmpMoney): Boolean {
+        requireSameCurrency(min)
+        requireSameCurrency(max)
+        return this.amount > min.amount && this.amount < max.amount
+    }
+
+    /**
+     * The sign of this amount: `-1` for negative, `0` for zero, `1` for positive.
+     */
+    val sign: Int
+        get() = when {
+            amount < BigDecimal.ZERO -> -1
+            amount > BigDecimal.ZERO -> 1
+            else -> 0
+        }
+
     /** The raw underlying [BigDecimal] amount, without rounding. */
     val number: BigDecimal
         get() = amount
