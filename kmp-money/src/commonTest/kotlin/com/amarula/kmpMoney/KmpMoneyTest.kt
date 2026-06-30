@@ -573,12 +573,18 @@ class KmpMoneyTest {
 
     @Test
     fun `percentage extracts correct portion`() {
-        assertEquals("10.00", KmpMoney.of("100.00", Currency.USD).percentage(10).numberStrippedString)
+        assertEquals(
+            "10.00",
+            KmpMoney.of("100.00", Currency.USD).percentage(10).numberStrippedString
+        )
     }
 
     @Test
     fun `percentage with fractional rate`() {
-        assertEquals("17.50", KmpMoney.of("100.00", Currency.USD).percentage(17.5).numberStrippedString)
+        assertEquals(
+            "17.50",
+            KmpMoney.of("100.00", Currency.USD).percentage(17.5).numberStrippedString
+        )
     }
 
     @Test
@@ -595,35 +601,53 @@ class KmpMoneyTest {
 
     @Test
     fun `addPercentage adds tax to base amount`() {
-        assertEquals("110.00", KmpMoney.of("100.00", Currency.USD).addPercentage(10).numberStrippedString)
+        assertEquals(
+            "110.00",
+            KmpMoney.of("100.00", Currency.USD).addPercentage(10).numberStrippedString
+        )
     }
 
     @Test
     fun `addPercentage with 20 percent`() {
-        assertEquals("120.00", KmpMoney.of("100.00", Currency.USD).addPercentage(20).numberStrippedString)
+        assertEquals(
+            "120.00",
+            KmpMoney.of("100.00", Currency.USD).addPercentage(20).numberStrippedString
+        )
     }
 
     @Test
     fun `addPercentage zero percent returns same value`() {
-        assertEquals("100.00", KmpMoney.of("100.00", Currency.USD).addPercentage(0).numberStrippedString)
+        assertEquals(
+            "100.00",
+            KmpMoney.of("100.00", Currency.USD).addPercentage(0).numberStrippedString
+        )
     }
 
     // ── subtractPercentage ────────────────────────────────────────────────────
 
     @Test
     fun `subtractPercentage recovers base from tax-inclusive amount`() {
-        assertEquals("100.00", KmpMoney.of("110.00", Currency.USD).subtractPercentage(10).numberStrippedString)
+        assertEquals(
+            "100.00",
+            KmpMoney.of("110.00", Currency.USD).subtractPercentage(10).numberStrippedString
+        )
     }
 
     @Test
     fun `subtractPercentage with 20 percent`() {
-        assertEquals("100.00", KmpMoney.of("120.00", Currency.USD).subtractPercentage(20).numberStrippedString)
+        assertEquals(
+            "100.00",
+            KmpMoney.of("120.00", Currency.USD).subtractPercentage(20).numberStrippedString
+        )
     }
 
     @Test
     fun `addPercentage and subtractPercentage are inverse operations`() {
         val base = KmpMoney.of("99.99", Currency.USD)
-        assertEquals(base.numberStrippedString, base.addPercentage(15).subtractPercentage(15).numberStrippedString)
+        assertEquals(
+            base.numberStrippedString,
+            base.addPercentage(15).subtractPercentage(15).numberStrippedString
+        )
     }
 
     // ── round ─────────────────────────────────────────────────────────────────
@@ -923,25 +947,33 @@ class KmpMoneyTest {
     @Test
     fun `isBetween returns true when amount is strictly between min and max`() {
         val m = KmpMoney.of("5.00", Currency.USD)
-        assertTrue(m.isBetween(KmpMoney.of("1.00", Currency.USD), KmpMoney.of("10.00", Currency.USD)))
+        assertTrue(
+            m.isBetween(KmpMoney.of("1.00", Currency.USD), KmpMoney.of("10.00", Currency.USD))
+        )
     }
 
     @Test
     fun `isBetween returns false when equal to min`() {
         val m = KmpMoney.of("1.00", Currency.USD)
-        assertFalse(m.isBetween(KmpMoney.of("1.00", Currency.USD), KmpMoney.of("10.00", Currency.USD)))
+        assertFalse(
+            m.isBetween(KmpMoney.of("1.00", Currency.USD), KmpMoney.of("10.00", Currency.USD))
+        )
     }
 
     @Test
     fun `isBetween returns false when equal to max`() {
         val m = KmpMoney.of("10.00", Currency.USD)
-        assertFalse(m.isBetween(KmpMoney.of("1.00", Currency.USD), KmpMoney.of("10.00", Currency.USD)))
+        assertFalse(
+            m.isBetween(KmpMoney.of("1.00", Currency.USD), KmpMoney.of("10.00", Currency.USD))
+        )
     }
 
     @Test
     fun `isBetween returns false when below range`() {
         val m = KmpMoney.of("0.50", Currency.USD)
-        assertFalse(m.isBetween(KmpMoney.of("1.00", Currency.USD), KmpMoney.of("10.00", Currency.USD)))
+        assertFalse(
+            m.isBetween(KmpMoney.of("1.00", Currency.USD), KmpMoney.of("10.00", Currency.USD))
+        )
     }
 
     @Test
