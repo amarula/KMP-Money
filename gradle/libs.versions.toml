@@ -13,6 +13,7 @@ activityCompose = "1.12.0"
 composeBom = "2024.09.00"
 ktlint = "14.2.0"
 compose = "1.11.1"
+big-num = "0.3.10"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -32,6 +33,7 @@ androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-te
 androidx-compose-material3 = { group = "androidx.compose.material3", name = "material3" }
 compose-components-resources = { group = "org.jetbrains.compose.components", name = "components-resources", version.ref = "compose" }
 runtime = { group = "org.jetbrains.compose.runtime", name = "runtime", version.ref = "compose" }
+big-num = { group = "com.ionspin.kotlin", name = "bignum", version.ref = "big-num" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
