@@ -441,6 +441,38 @@ class KmpMoneyTest {
         assertEquals("-10.00", (-KmpMoney.of("10.00", Currency.USD)).numberStrippedString)
     }
 
+    // ── round ─────────────────────────────────────────────────────────────────
+
+    @Test
+    fun `round with ROUND_HALF_AWAY_FROM_ZERO rounds 0_5 up for positive`() {
+        assertEquals("10.56", KmpMoney.of("10.555", Currency.USD).round(RoundingMode.ROUND_HALF_AWAY_FROM_ZERO).numberStrippedString)
+    }
+
+    @Test
+    fun `round with CEILING rounds up`() {
+        assertEquals("10.56", KmpMoney.of("10.551", Currency.USD).round(RoundingMode.CEILING).numberStrippedString)
+    }
+
+    @Test
+    fun `round with FLOOR rounds down`() {
+        assertEquals("10.55", KmpMoney.of("10.559", Currency.USD).round(RoundingMode.FLOOR).numberStrippedString)
+    }
+
+    @Test
+    fun `round with TOWARDS_ZERO truncates`() {
+        assertEquals("10.55", KmpMoney.of("10.559", Currency.USD).round(RoundingMode.TOWARDS_ZERO).numberStrippedString)
+    }
+
+    @Test
+    fun `round preserves currency`() {
+        assertEquals(Currency.EUR, KmpMoney.of("1.555", Currency.EUR).round(RoundingMode.FLOOR).currency)
+    }
+
+    @Test
+    fun `round on zero-decimal currency rounds to whole unit`() {
+        assertEquals("1500", KmpMoney.of("1500.9", Currency.JPY).round(RoundingMode.FLOOR).numberStrippedString)
+    }
+
     // ── of(BigDecimal, Currency) ──────────────────────────────────────────────
 
     @Test
