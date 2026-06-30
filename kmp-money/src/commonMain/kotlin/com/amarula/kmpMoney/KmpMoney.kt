@@ -1,5 +1,6 @@
 package com.amarula.kmpMoney
 
+import androidx.compose.runtime.Stable
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
 import com.ionspin.kotlin.bignum.decimal.DecimalMode
 import com.ionspin.kotlin.bignum.decimal.RoundingMode
@@ -12,6 +13,7 @@ import com.ionspin.kotlin.bignum.decimal.RoundingMode
  *
  * @property currency The currency this amount is denominated in.
  */
+@Stable
 data class KmpMoney(private val amount: BigDecimal, val currency: Currency) : Comparable<KmpMoney> {
 
     /**
@@ -41,7 +43,13 @@ data class KmpMoney(private val amount: BigDecimal, val currency: Currency) : Co
     ): String {
         val formatted = number.formatMoney(currency.decimalPlaces, groupingSeparator)
         if (!showSymbol) return formatted
-        val label = if (useCode) currency.name else currency.currencySymbol.ifEmpty { currency.name }
+        val label = if (useCode) {
+            currency.name
+        } else {
+            currency.currencySymbol.ifEmpty {
+                currency.name
+            }
+        }
         return if (currency.symbolIsPrefix) "$label $formatted" else "$formatted $label"
     }
 
@@ -68,7 +76,10 @@ data class KmpMoney(private val amount: BigDecimal, val currency: Currency) : Co
         val formatted = if (divisor == null) {
             number.formatMoney(currency.decimalPlaces)
         } else {
-            val compact = amount.divide(divisor, DecimalMode(34L, RoundingMode.ROUND_HALF_AWAY_FROM_ZERO))
+            val compact = amount.divide(
+                divisor,
+                DecimalMode(34L, RoundingMode.ROUND_HALF_AWAY_FROM_ZERO)
+            )
                 .roundToDigitPositionAfterDecimalPoint(1, RoundingMode.ROUND_HALF_AWAY_FROM_ZERO)
                 .toPlainString()
             "$compact$suffix"
@@ -421,7 +432,12 @@ data class KmpMoney(private val amount: BigDecimal, val currency: Currency) : Co
             val value = if (currency.decimalPlaces == 0) {
                 BigDecimal.fromLong(minorUnits)
             } else {
-                BigDecimal.fromLong(minorUnits).divide(factor, DecimalMode(DECIMAL128_PRECISION, RoundingMode.ROUND_HALF_AWAY_FROM_ZERO))
+                BigDecimal.fromLong(
+                    minorUnits
+                ).divide(
+                    factor,
+                    DecimalMode(DECIMAL128_PRECISION, RoundingMode.ROUND_HALF_AWAY_FROM_ZERO)
+                )
             }
             return KmpMoney(value, currency)
         }
