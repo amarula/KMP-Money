@@ -86,7 +86,7 @@ node('android-build') {
                 'Test': {
                     try {
                         sh '''#!/bin/bash -il
-                            ./gradlew allTests
+                            ./gradlew allTests koverXmlReport
                         '''
                     } finally {
                         String testFolder = "kmp-money/build/reports/tests/allTests"
@@ -95,6 +95,22 @@ node('android-build') {
                         String testReportFile = 'test-reports.tar.gz'
                         sh "find . -path '*/${testFolder}' -print0 | xargs -0 tar -czvf ${testReportFile}"
                         archiveArtifacts testReportFile
+
+                        String koverReportFile = "kmp-money/build/reports/kover/report.xml"
+                        /* Look for Kover report and record if exists */
+                        Integer koverReportExists = sh(
+                            script: "find ${koverReportFile} | grep .",
+                            returnStatus: true
+                        )
+                        if (koverReportExists == 0) {
+                            archiveArtifacts koverReportFile
+                            recordCoverage(
+                                sourceDirectories: [
+                                    [path: 'kmp-money/src/commonMain/kotlin']
+                                ],
+                                tools: [[pattern: koverReportFile]]
+                            )
+                        }
                     }
                 }
             ], options)
