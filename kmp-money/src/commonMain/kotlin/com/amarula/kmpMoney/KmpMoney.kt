@@ -334,6 +334,17 @@ data class KmpMoney(private val amount: BigDecimal, val currency: Currency) : Co
         }
     }
 
+    /**
+     * Serialises this amount to a [Map] with two keys: `"amount"` (the rounded decimal string)
+     * and `"currency"` (the ISO currency code). Suitable for key-value stores and JSON-like maps.
+     *
+     * Use [KmpMoney.fromMap] to deserialise.
+     */
+    fun toMap(): Map<String, String> = mapOf(
+        "amount" to numberStrippedString,
+        "currency" to currency.name
+    )
+
     /** Returns a debug string in the form `"USD 12.5"` using the raw unformatted amount. */
     override fun toString(): String = "${currency.name} ${amount.toPlainString()}"
 
@@ -413,6 +424,20 @@ data class KmpMoney(private val amount: BigDecimal, val currency: Currency) : Co
                 BigDecimal.fromLong(minorUnits).divide(factor, DecimalMode(DECIMAL128_PRECISION, RoundingMode.ROUND_HALF_AWAY_FROM_ZERO))
             }
             return KmpMoney(value, currency)
+        }
+
+        /**
+         * Deserialises a [KmpMoney] from a map produced by [KmpMoney.toMap].
+         *
+         * Expects keys `"amount"` (decimal string) and `"currency"` (ISO code).
+         * Falls back to [Currency.UNKNOWN] for unrecognised currency codes.
+         *
+         * @throws IllegalArgumentException if either key is absent.
+         */
+        fun fromMap(map: Map<String, String>): KmpMoney {
+            val amount = requireNotNull(map["amount"]) { "Missing 'amount' key in map" }
+            val currency = requireNotNull(map["currency"]) { "Missing 'currency' key in map" }
+            return of(amount, currency)
         }
     }
 
