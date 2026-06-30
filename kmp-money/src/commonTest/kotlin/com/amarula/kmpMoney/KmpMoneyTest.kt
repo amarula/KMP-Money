@@ -441,6 +441,89 @@ class KmpMoneyTest {
         assertEquals("-10.00", (-KmpMoney.of("10.00", Currency.USD)).numberStrippedString)
     }
 
+    // ── of(BigDecimal, Currency) ──────────────────────────────────────────────
+
+    @Test
+    fun `of BigDecimal currency stores value and currency`() {
+        val bd = BigDecimal.parseString("12.34")
+        val m = KmpMoney.of(bd, Currency.USD)
+        assertEquals("12.34", m.numberStrippedString)
+        assertEquals(Currency.USD, m.currency)
+    }
+
+    // ── zero ──────────────────────────────────────────────────────────────────
+
+    @Test
+    fun `zero returns zero amount for given currency`() {
+        val m = KmpMoney.zero(Currency.EUR)
+        assertTrue(m.isZero())
+        assertEquals(Currency.EUR, m.currency)
+    }
+
+    // ── ofMinorUnits ──────────────────────────────────────────────────────────
+
+    @Test
+    fun `ofMinorUnits converts cents to USD`() {
+        assertEquals("1.50", KmpMoney.ofMinorUnits(150L, Currency.USD).numberStrippedString)
+    }
+
+    @Test
+    fun `ofMinorUnits converts minor units for zero-decimal currency`() {
+        assertEquals("1500", KmpMoney.ofMinorUnits(1500L, Currency.JPY).numberStrippedString)
+    }
+
+    @Test
+    fun `ofMinorUnits converts minor units for three-decimal currency`() {
+        assertEquals("1.500", KmpMoney.ofMinorUnits(1500L, Currency.BHD).numberStrippedString)
+    }
+
+    @Test
+    fun `ofMinorUnits handles negative minor units`() {
+        assertEquals("-0.50", KmpMoney.ofMinorUnits(-50L, Currency.USD).numberStrippedString)
+    }
+
+    // ── toBigDecimal ──────────────────────────────────────────────────────────
+
+    @Test
+    fun `toBigDecimal returns amount rounded to currency scale`() {
+        assertEquals(BigDecimal.parseString("10.56"), KmpMoney.of("10.555", Currency.USD).toBigDecimal())
+    }
+
+    // ── toDouble ──────────────────────────────────────────────────────────────
+
+    @Test
+    fun `toDouble returns amount as double`() {
+        assertEquals(12.34, KmpMoney.of("12.34", Currency.USD).toDouble())
+    }
+
+    // ── toMinorUnits ──────────────────────────────────────────────────────────
+
+    @Test
+    fun `toMinorUnits converts USD to cents`() {
+        assertEquals(150L, KmpMoney.of("1.50", Currency.USD).toMinorUnits())
+    }
+
+    @Test
+    fun `toMinorUnits for zero-decimal currency returns whole units`() {
+        assertEquals(1500L, KmpMoney.of("1500", Currency.JPY).toMinorUnits())
+    }
+
+    @Test
+    fun `toMinorUnits rounds half-away-from-zero`() {
+        assertEquals(156L, KmpMoney.of("1.555", Currency.USD).toMinorUnits())
+    }
+
+    @Test
+    fun `toMinorUnits handles negative amount`() {
+        assertEquals(-50L, KmpMoney.of("-0.50", Currency.USD).toMinorUnits())
+    }
+
+    @Test
+    fun `ofMinorUnits and toMinorUnits are inverse operations`() {
+        val original = 12345L
+        assertEquals(original, KmpMoney.ofMinorUnits(original, Currency.USD).toMinorUnits())
+    }
+
     // ── isZero ────────────────────────────────────────────────────────────────
 
     @Test
