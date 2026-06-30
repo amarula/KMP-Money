@@ -441,6 +441,76 @@ class KmpMoneyTest {
         assertEquals("-10.00", (-KmpMoney.of("10.00", Currency.USD)).numberStrippedString)
     }
 
+    // ── format ────────────────────────────────────────────────────────────────
+
+    @Test
+    fun `format default matches toMoneyString`() {
+        val m = KmpMoney.of("1234.56", Currency.USD)
+        assertEquals(m.toMoneyString(), m.format())
+    }
+
+    @Test
+    fun `format showSymbol false returns plain number`() {
+        assertEquals("1,234.56", KmpMoney.of("1234.56", Currency.USD).format(showSymbol = false))
+    }
+
+    @Test
+    fun `format useCode true uses ISO code instead of symbol`() {
+        assertEquals("USD 1,234.56", KmpMoney.of("1234.56", Currency.USD).format(useCode = true))
+    }
+
+    @Test
+    fun `format useCode false uses symbol`() {
+        assertEquals("$ 1,234.56", KmpMoney.of("1234.56", Currency.USD).format(useCode = false))
+    }
+
+    @Test
+    fun `format with custom groupingSeparator`() {
+        assertEquals("$ 1.234.56", KmpMoney.of("1234.56", Currency.USD).format(groupingSeparator = '.'))
+    }
+
+    @Test
+    fun `format suffix currency places label after amount`() {
+        assertEquals("1,234.56 Kč", KmpMoney.of("1234.56", Currency.CZK).format())
+    }
+
+    @Test
+    fun `format suffix currency with useCode true`() {
+        assertEquals("1,234.56 CZK", KmpMoney.of("1234.56", Currency.CZK).format(useCode = true))
+    }
+
+    // ── toCompactString ───────────────────────────────────────────────────────
+
+    @Test
+    fun `toCompactString formats amount below 1000 at full precision`() {
+        assertEquals("$ 999.99", KmpMoney.of("999.99", Currency.USD).toCompactString())
+    }
+
+    @Test
+    fun `toCompactString abbreviates thousands with K`() {
+        assertEquals("$ 1.5K", KmpMoney.of("1500", Currency.USD).toCompactString())
+    }
+
+    @Test
+    fun `toCompactString abbreviates millions with M`() {
+        assertEquals("$ 2.3M", KmpMoney.of("2300000", Currency.USD).toCompactString())
+    }
+
+    @Test
+    fun `toCompactString abbreviates billions with B`() {
+        assertEquals("$ 4.1B", KmpMoney.of("4100000000", Currency.USD).toCompactString())
+    }
+
+    @Test
+    fun `toCompactString handles negative thousands`() {
+        assertEquals("$ -1.5K", KmpMoney.of("-1500", Currency.USD).toCompactString())
+    }
+
+    @Test
+    fun `toCompactString places suffix currency label correctly`() {
+        assertEquals("1.5K Kč", KmpMoney.of("1500", Currency.CZK).toCompactString())
+    }
+
     // ── round ─────────────────────────────────────────────────────────────────
 
     @Test
