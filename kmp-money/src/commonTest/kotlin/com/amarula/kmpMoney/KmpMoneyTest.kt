@@ -1010,7 +1010,10 @@ class KmpMoneyTest {
     @Test
     fun `coerceAtLeast returns self when equal to min`() {
         val m = KmpMoney.of("1.00", Currency.USD)
-        assertEquals("1.00", m.coerceAtLeast(KmpMoney.of("1.00", Currency.USD)).numberStrippedString)
+        assertEquals(
+            "1.00",
+            m.coerceAtLeast(KmpMoney.of("1.00", Currency.USD)).numberStrippedString
+        )
     }
 
     @Test
@@ -1025,19 +1028,28 @@ class KmpMoneyTest {
     @Test
     fun `coerceAtMost returns self when below max`() {
         val m = KmpMoney.of("5.00", Currency.USD)
-        assertEquals("5.00", m.coerceAtMost(KmpMoney.of("10.00", Currency.USD)).numberStrippedString)
+        assertEquals(
+            "5.00",
+            m.coerceAtMost(KmpMoney.of("10.00", Currency.USD)).numberStrippedString
+        )
     }
 
     @Test
     fun `coerceAtMost returns max when above max`() {
         val m = KmpMoney.of("15.00", Currency.USD)
-        assertEquals("10.00", m.coerceAtMost(KmpMoney.of("10.00", Currency.USD)).numberStrippedString)
+        assertEquals(
+            "10.00",
+            m.coerceAtMost(KmpMoney.of("10.00", Currency.USD)).numberStrippedString
+        )
     }
 
     @Test
     fun `coerceAtMost returns self when equal to max`() {
         val m = KmpMoney.of("10.00", Currency.USD)
-        assertEquals("10.00", m.coerceAtMost(KmpMoney.of("10.00", Currency.USD)).numberStrippedString)
+        assertEquals(
+            "10.00",
+            m.coerceAtMost(KmpMoney.of("10.00", Currency.USD)).numberStrippedString
+        )
     }
 
     // ── coerceIn ──────────────────────────────────────────────────────────────
@@ -1045,28 +1057,37 @@ class KmpMoneyTest {
     @Test
     fun `coerceIn returns self when within range`() {
         val m = KmpMoney.of("5.00", Currency.USD)
-        assertEquals("5.00", m.coerceIn(
-            KmpMoney.of("1.00", Currency.USD),
-            KmpMoney.of("10.00", Currency.USD)
-        ).numberStrippedString)
+        assertEquals(
+            "5.00",
+            m.coerceIn(
+                KmpMoney.of("1.00", Currency.USD),
+                KmpMoney.of("10.00", Currency.USD)
+            ).numberStrippedString
+        )
     }
 
     @Test
     fun `coerceIn clamps to min when below range`() {
         val m = KmpMoney.of("0.50", Currency.USD)
-        assertEquals("1.00", m.coerceIn(
-            KmpMoney.of("1.00", Currency.USD),
-            KmpMoney.of("10.00", Currency.USD)
-        ).numberStrippedString)
+        assertEquals(
+            "1.00",
+            m.coerceIn(
+                KmpMoney.of("1.00", Currency.USD),
+                KmpMoney.of("10.00", Currency.USD)
+            ).numberStrippedString
+        )
     }
 
     @Test
     fun `coerceIn clamps to max when above range`() {
         val m = KmpMoney.of("20.00", Currency.USD)
-        assertEquals("10.00", m.coerceIn(
-            KmpMoney.of("1.00", Currency.USD),
-            KmpMoney.of("10.00", Currency.USD)
-        ).numberStrippedString)
+        assertEquals(
+            "10.00",
+            m.coerceIn(
+                KmpMoney.of("1.00", Currency.USD),
+                KmpMoney.of("10.00", Currency.USD)
+            ).numberStrippedString
+        )
     }
 
     @Test
