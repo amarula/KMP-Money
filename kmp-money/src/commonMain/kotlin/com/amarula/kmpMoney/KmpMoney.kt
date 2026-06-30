@@ -343,6 +343,17 @@ data class KmpMoney(private val amount: BigDecimal, val currency: Currency) : Co
         }
     }
 
+    /**
+     * Serialises this amount to a [Map] with two keys: `"amount"` (the rounded decimal string)
+     * and `"currency"` (the ISO currency code). Suitable for key-value stores and JSON-like maps.
+     *
+     * Use [KmpMoney.fromMap] to deserialise.
+     */
+    fun toMap(): Map<String, String> = mapOf(
+        MAP_KEY_AMOUNT to numberStrippedString,
+        MAP_KEY_CURRENCY to currency.name
+    )
+
     /** Returns a debug string in the form `"USD 12.5"` using the raw unformatted amount. */
     override fun toString(): String = "${currency.name} ${amount.toPlainString()}"
 
@@ -353,6 +364,9 @@ data class KmpMoney(private val amount: BigDecimal, val currency: Currency) : Co
         // Using this as the intermediate precision for divide/remainder prevents
         // silent truncation while staying consistent with the standard.
         private const val DECIMAL128_PRECISION = 34L
+
+        const val MAP_KEY_AMOUNT = "amount"
+        const val MAP_KEY_CURRENCY = "currency"
 
         /**
          * Creates a [KmpMoney] from a decimal string and a [Currency].
@@ -427,6 +441,22 @@ data class KmpMoney(private val amount: BigDecimal, val currency: Currency) : Co
                 )
             }
             return KmpMoney(value, currency)
+        }
+
+        /**
+         * Deserialises a [KmpMoney] from a map produced by [KmpMoney.toMap].
+         *
+         * Expects keys `"amount"` (decimal string) and `"currency"` (ISO code).
+         * Falls back to [Currency.UNKNOWN] for unrecognised currency codes.
+         *
+         * @throws IllegalArgumentException if either key is absent.
+         */
+        fun fromMap(map: Map<String, String>): KmpMoney {
+            val amount =
+                requireNotNull(map[MAP_KEY_AMOUNT]) { "Missing '$MAP_KEY_AMOUNT' key in map" }
+            val currency =
+                requireNotNull(map[MAP_KEY_CURRENCY]) { "Missing '$MAP_KEY_CURRENCY' key in map" }
+            return of(amount, currency)
         }
     }
 
