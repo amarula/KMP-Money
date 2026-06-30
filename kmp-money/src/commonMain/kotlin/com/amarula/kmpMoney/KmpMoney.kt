@@ -241,6 +241,19 @@ data class KmpMoney(private val amount: BigDecimal, val currency: Currency) : Co
         }
     }
 
+    /**
+     * Splits this amount into [n] equal parts without losing any minor unit.
+     * Leftover pennies are assigned to the first slots, identical to
+     * `allocate(List(n) { 1 })`.
+     *
+     * @param n Number of equal parts; must be positive.
+     * @throws IllegalArgumentException if [n] is not positive.
+     */
+    fun split(n: Int): List<KmpMoney> {
+        require(n > 0) { "Split count must be positive" }
+        return allocate(List(n) { 1 })
+    }
+
     /** Operator alias for [add]. @throws IllegalArgumentException on currency mismatch. */
     operator fun plus(other: KmpMoney): KmpMoney = add(other)
 
