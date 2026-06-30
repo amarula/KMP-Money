@@ -396,6 +396,55 @@ class KmpMoneyTest {
         }
     }
 
+    // ── split ─────────────────────────────────────────────────────────────────
+
+    @Test
+    fun `split divides evenly into n parts`() {
+        val parts = KmpMoney.of("30.00", Currency.USD).split(3)
+        assertEquals(3, parts.size)
+        parts.forEach { assertEquals("10.00", it.numberStrippedString) }
+    }
+
+    @Test
+    fun `split distributes leftover penny to first parts`() {
+        val parts = KmpMoney.of("10.01", Currency.USD).split(3)
+        assertEquals("3.34", parts[0].numberStrippedString)
+        assertEquals("3.34", parts[1].numberStrippedString)
+        assertEquals("3.33", parts[2].numberStrippedString)
+    }
+
+    @Test
+    fun `split into 1 returns the original amount`() {
+        val parts = KmpMoney.of("9.99", Currency.USD).split(1)
+        assertEquals(1, parts.size)
+        assertEquals("9.99", parts[0].numberStrippedString)
+    }
+
+    @Test
+    fun `split preserves total without losing minor units`() {
+        val total = KmpMoney.of("10.00", Currency.USD)
+        val parts = total.split(3)
+        val minorSum = parts.sumOf {
+            it.number.multiply(com.ionspin.kotlin.bignum.decimal.BigDecimal.parseString("100"))
+                .longValue(exactRequired = false)
+        }
+        assertEquals(1000L, minorSum)
+    }
+
+    @Test
+    fun `split throws for zero count`() {
+        assertFailsWith<IllegalArgumentException> {
+            KmpMoney.of("10.00", Currency.USD).split(0)
+        }
+    }
+
+    @Test
+    fun `split throws for negative count`() {
+        assertFailsWith<IllegalArgumentException> {
+            KmpMoney.of("10.00", Currency.USD).split(-1)
+        }
+    }
+
     // ── operator overloads ────────────────────────────────────────────────────
 
     @Test
