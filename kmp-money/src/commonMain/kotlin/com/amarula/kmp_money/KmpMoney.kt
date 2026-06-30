@@ -238,6 +238,23 @@ data class KmpMoney(private val amount: BigDecimal, val currency: Currency) : Co
     val number: BigDecimal
         get() = amount
 
+    /** Returns the amount rounded to [Currency.decimalPlaces] as a [BigDecimal]. */
+    fun toBigDecimal(): BigDecimal = numberStripped
+
+    /** Returns the amount rounded to [Currency.decimalPlaces] as a [Double]. */
+    fun toDouble(): Double = numberStripped.doubleValue(exactRequired = false)
+
+    /**
+     * Returns the amount as an integer count of the currency's minor units
+     * (e.g. `1.50 USD` → `150`), rounded half-away-from-zero.
+     */
+    fun toMinorUnits(): Long {
+        val factor = BigDecimal.parseString("1" + "0".repeat(currency.decimalPlaces))
+        return (amount * factor)
+            .roundToDigitPositionAfterDecimalPoint(0, RoundingMode.ROUND_HALF_AWAY_FROM_ZERO)
+            .longValue(exactRequired = false)
+    }
+
     /**
      * Compares this amount to [other] by value.
      *
@@ -305,6 +322,34 @@ data class KmpMoney(private val amount: BigDecimal, val currency: Currency) : Co
             val curr = Currency.fromName(currency)
                 ?: Currency.UNKNOWN
             return KmpMoney(BigDecimal.parseString(amount.toString()), curr)
+        }
+
+        /**
+         * Creates a [KmpMoney] from a [BigDecimal] and a [Currency].
+         *
+         * @param amount [BigDecimal] value.
+         */
+        fun of(amount: BigDecimal, currency: Currency): KmpMoney = KmpMoney(amount, currency)
+
+        /**
+         * Creates a [KmpMoney] with a zero amount for the given [currency].
+         */
+        fun zero(currency: Currency): KmpMoney = KmpMoney(BigDecimal.ZERO, currency)
+
+        /**
+         * Creates a [KmpMoney] from an integer count of the currency's minor units
+         * (e.g. cents for USD, pence for GBP, yen for JPY).
+         *
+         * @param minorUnits Integer minor-unit amount (e.g. `150` → `1.50 USD`).
+         */
+        fun ofMinorUnits(minorUnits: Long, currency: Currency): KmpMoney {
+            val factor = BigDecimal.parseString("1" + "0".repeat(currency.decimalPlaces))
+            val value = if (currency.decimalPlaces == 0) {
+                BigDecimal.fromLong(minorUnits)
+            } else {
+                BigDecimal.fromLong(minorUnits).divide(factor, DecimalMode(DECIMAL128_PRECISION, RoundingMode.ROUND_HALF_AWAY_FROM_ZERO))
+            }
+            return KmpMoney(value, currency)
         }
     }
 
