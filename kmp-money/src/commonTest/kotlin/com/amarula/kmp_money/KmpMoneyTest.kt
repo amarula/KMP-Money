@@ -882,6 +882,57 @@ class KmpMoneyTest {
         }
     }
 
+    // ── isBetween ─────────────────────────────────────────────────────────────
+
+    @Test
+    fun `isBetween returns true when amount is strictly between min and max`() {
+        val m = KmpMoney.of("5.00", Currency.USD)
+        assertTrue(m.isBetween(KmpMoney.of("1.00", Currency.USD), KmpMoney.of("10.00", Currency.USD)))
+    }
+
+    @Test
+    fun `isBetween returns false when equal to min`() {
+        val m = KmpMoney.of("1.00", Currency.USD)
+        assertFalse(m.isBetween(KmpMoney.of("1.00", Currency.USD), KmpMoney.of("10.00", Currency.USD)))
+    }
+
+    @Test
+    fun `isBetween returns false when equal to max`() {
+        val m = KmpMoney.of("10.00", Currency.USD)
+        assertFalse(m.isBetween(KmpMoney.of("1.00", Currency.USD), KmpMoney.of("10.00", Currency.USD)))
+    }
+
+    @Test
+    fun `isBetween returns false when below range`() {
+        val m = KmpMoney.of("0.50", Currency.USD)
+        assertFalse(m.isBetween(KmpMoney.of("1.00", Currency.USD), KmpMoney.of("10.00", Currency.USD)))
+    }
+
+    @Test
+    fun `isBetween throws on currency mismatch in min`() {
+        assertFailsWith<IllegalArgumentException> {
+            KmpMoney.of("5.00", Currency.USD)
+                .isBetween(KmpMoney.of("1.00", Currency.EUR), KmpMoney.of("10.00", Currency.USD))
+        }
+    }
+
+    // ── sign ──────────────────────────────────────────────────────────────────
+
+    @Test
+    fun `sign is 1 for positive amount`() {
+        assertEquals(1, KmpMoney.of("1.00", Currency.USD).sign)
+    }
+
+    @Test
+    fun `sign is 0 for zero amount`() {
+        assertEquals(0, KmpMoney.of("0", Currency.USD).sign)
+    }
+
+    @Test
+    fun `sign is -1 for negative amount`() {
+        assertEquals(-1, KmpMoney.of("-0.01", Currency.USD).sign)
+    }
+
     // ── toString ──────────────────────────────────────────────────────────────
 
     @Test
