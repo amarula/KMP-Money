@@ -441,6 +441,156 @@ class KmpMoneyTest {
         assertEquals("-10.00", (-KmpMoney.of("10.00", Currency.USD)).numberStrippedString)
     }
 
+    // ── isZero ────────────────────────────────────────────────────────────────
+
+    @Test
+    fun `isZero returns true for zero`() {
+        assertTrue(KmpMoney.of("0", Currency.USD).isZero())
+    }
+
+    @Test
+    fun `isZero returns true for zero with decimal`() {
+        assertTrue(KmpMoney.of("0.00", Currency.USD).isZero())
+    }
+
+    @Test
+    fun `isZero returns false for positive amount`() {
+        assertFalse(KmpMoney.of("0.01", Currency.USD).isZero())
+    }
+
+    @Test
+    fun `isZero returns false for negative amount`() {
+        assertFalse(KmpMoney.of("-0.01", Currency.USD).isZero())
+    }
+
+    // ── isPositive ────────────────────────────────────────────────────────────
+
+    @Test
+    fun `isPositive returns true for positive amount`() {
+        assertTrue(KmpMoney.of("1.00", Currency.USD).isPositive())
+    }
+
+    @Test
+    fun `isPositive returns false for zero`() {
+        assertFalse(KmpMoney.of("0", Currency.USD).isPositive())
+    }
+
+    @Test
+    fun `isPositive returns false for negative amount`() {
+        assertFalse(KmpMoney.of("-1.00", Currency.USD).isPositive())
+    }
+
+    // ── isNegative ────────────────────────────────────────────────────────────
+
+    @Test
+    fun `isNegative returns true for negative amount`() {
+        assertTrue(KmpMoney.of("-0.01", Currency.USD).isNegative())
+    }
+
+    @Test
+    fun `isNegative returns false for zero`() {
+        assertFalse(KmpMoney.of("0", Currency.USD).isNegative())
+    }
+
+    @Test
+    fun `isNegative returns false for positive amount`() {
+        assertFalse(KmpMoney.of("1.00", Currency.USD).isNegative())
+    }
+
+    // ── isGreaterThan ─────────────────────────────────────────────────────────
+
+    @Test
+    fun `isGreaterThan returns true when greater`() {
+        assertTrue(
+            KmpMoney.of("2.00", Currency.USD).isGreaterThan(KmpMoney.of("1.00", Currency.USD))
+        )
+    }
+
+    @Test
+    fun `isGreaterThan returns false for equal amounts`() {
+        assertFalse(
+            KmpMoney.of("1.00", Currency.USD).isGreaterThan(KmpMoney.of("1.00", Currency.USD))
+        )
+    }
+
+    @Test
+    fun `isGreaterThan returns false when less`() {
+        assertFalse(
+            KmpMoney.of("1.00", Currency.USD).isGreaterThan(KmpMoney.of("2.00", Currency.USD))
+        )
+    }
+
+    @Test
+    fun `isGreaterThan throws on currency mismatch`() {
+        assertFailsWith<IllegalArgumentException> {
+            KmpMoney.of("2.00", Currency.USD).isGreaterThan(KmpMoney.of("1.00", Currency.EUR))
+        }
+    }
+
+    // ── isLessThan ────────────────────────────────────────────────────────────
+
+    @Test
+    fun `isLessThan returns true when less`() {
+        assertTrue(KmpMoney.of("1.00", Currency.USD).isLessThan(KmpMoney.of("2.00", Currency.USD)))
+    }
+
+    @Test
+    fun `isLessThan returns false for equal amounts`() {
+        assertFalse(KmpMoney.of("1.00", Currency.USD).isLessThan(KmpMoney.of("1.00", Currency.USD)))
+    }
+
+    @Test
+    fun `isLessThan returns false when greater`() {
+        assertFalse(KmpMoney.of("2.00", Currency.USD).isLessThan(KmpMoney.of("1.00", Currency.USD)))
+    }
+
+    @Test
+    fun `isLessThan throws on currency mismatch`() {
+        assertFailsWith<IllegalArgumentException> {
+            KmpMoney.of("1.00", Currency.USD).isLessThan(KmpMoney.of("2.00", Currency.EUR))
+        }
+    }
+
+    // ── isSameCurrency ────────────────────────────────────────────────────────
+
+    @Test
+    fun `isSameCurrency returns true for matching currencies`() {
+        assertTrue(
+            KmpMoney.of("1.00", Currency.USD).isSameCurrency(KmpMoney.of("99.00", Currency.USD))
+        )
+    }
+
+    @Test
+    fun `isSameCurrency returns false for different currencies`() {
+        assertFalse(
+            KmpMoney.of("1.00", Currency.USD).isSameCurrency(KmpMoney.of("1.00", Currency.EUR))
+        )
+    }
+
+    // ── isEqualTo ─────────────────────────────────────────────────────────────
+
+    @Test
+    fun `isEqualTo returns true for same value`() {
+        assertTrue(KmpMoney.of("5.00", Currency.USD).isEqualTo(KmpMoney.of("5.00", Currency.USD)))
+    }
+
+    @Test
+    fun `isEqualTo returns true for numerically equal values with different representations`() {
+        assertTrue(KmpMoney.of("5.0", Currency.USD).isEqualTo(KmpMoney.of("5.00", Currency.USD)))
+    }
+
+    @Test
+    fun `isEqualTo returns false for different values`() {
+        assertFalse(KmpMoney.of("5.00", Currency.USD).isEqualTo(KmpMoney.of("5.01", Currency.USD)))
+    }
+
+    @Test
+    fun `isEqualTo throws on currency mismatch`() {
+        assertFailsWith<IllegalArgumentException> {
+            KmpMoney.of("5.00", Currency.USD).isEqualTo(KmpMoney.of("5.00", Currency.EUR))
+        }
+    }
+
     // ── toString ──────────────────────────────────────────────────────────────
 
     @Test

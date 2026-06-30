@@ -190,6 +190,50 @@ data class KmpMoney(private val amount: BigDecimal, val currency: Currency) : Co
     /** Returns `true` if the amount is zero or negative. */
     fun isNegativeOrZero(): Boolean = amount <= BigDecimal.ZERO
 
+    /** Returns `true` if the amount is exactly zero. */
+    fun isZero(): Boolean = amount.compareTo(BigDecimal.ZERO) == 0
+
+    /** Returns `true` if the amount is strictly greater than zero. */
+    fun isPositive(): Boolean = amount > BigDecimal.ZERO
+
+    /** Returns `true` if the amount is strictly less than zero. */
+    fun isNegative(): Boolean = amount < BigDecimal.ZERO
+
+    /**
+     * Returns `true` if this amount is strictly greater than [other].
+     *
+     * @throws IllegalArgumentException if [other] has a different currency.
+     */
+    fun isGreaterThan(other: KmpMoney): Boolean {
+        requireSameCurrency(other)
+        return this.amount > other.amount
+    }
+
+    /**
+     * Returns `true` if this amount is strictly less than [other].
+     *
+     * @throws IllegalArgumentException if [other] has a different currency.
+     */
+    fun isLessThan(other: KmpMoney): Boolean {
+        requireSameCurrency(other)
+        return this.amount < other.amount
+    }
+
+    /** Returns `true` if [other] has the same currency as this amount. */
+    fun isSameCurrency(other: KmpMoney): Boolean = this.currency == other.currency
+
+    /**
+     * Returns `true` if this amount equals [other] in both value and currency.
+     *
+     * Unlike [equals], this compares amounts numerically (e.g. `1.0` == `1.00`).
+     *
+     * @throws IllegalArgumentException if [other] has a different currency.
+     */
+    fun isEqualTo(other: KmpMoney): Boolean {
+        requireSameCurrency(other)
+        return this.amount.compareTo(other.amount) == 0
+    }
+
     /** The raw underlying [BigDecimal] amount, without rounding. */
     val number: BigDecimal
         get() = amount
