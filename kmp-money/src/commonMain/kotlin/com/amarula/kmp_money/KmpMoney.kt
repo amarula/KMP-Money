@@ -138,6 +138,38 @@ data class KmpMoney(private val amount: BigDecimal, val currency: Currency) : Co
         roundingMode: RoundingMode = RoundingMode.ROUND_HALF_AWAY_FROM_ZERO
     ): KmpMoney = divide(BigDecimal.parseString(divisor.toString()), roundingMode)
 
+    /**
+     * Returns the portion of this amount that represents [rate] percent.
+     *
+     * Example: `100.00.percentage(10)` → `10.00`
+     *
+     * @param rate Percentage value, e.g. `10` for 10 %.
+     */
+    fun percentage(rate: Number): KmpMoney =
+        multiply(BigDecimal.parseString(rate.toString()) / BigDecimal.parseString("100"))
+
+    /**
+     * Returns this amount increased by [rate] percent (e.g. adding VAT or a markup).
+     *
+     * Example: `100.00.addPercentage(10)` → `110.00`
+     *
+     * @param rate Percentage value, e.g. `10` for 10 %.
+     */
+    fun addPercentage(rate: Number): KmpMoney = add(percentage(rate))
+
+    /**
+     * Returns the pre-tax / pre-markup base amount when this amount already includes
+     * an embedded [rate] percent (reverse percentage calculation).
+     *
+     * Example: `110.00.subtractPercentage(10)` → `100.00`
+     *
+     * @param rate Percentage value, e.g. `10` for 10 %.
+     */
+    fun subtractPercentage(rate: Number): KmpMoney {
+        val divisor = BigDecimal.parseString("100") + BigDecimal.parseString(rate.toString())
+        return divide(divisor / BigDecimal.parseString("100"))
+    }
+
     /** Returns a new [KmpMoney] with the sign of this amount flipped. */
     fun negate(): KmpMoney = KmpMoney(amount.negate(), currency)
 

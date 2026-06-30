@@ -560,6 +560,63 @@ class KmpMoneyTest {
         assertEquals("1.5K Kč", KmpMoney.of("1500", Currency.CZK).toCompactString())
     }
 
+    // ── percentage ────────────────────────────────────────────────────────────
+
+    @Test
+    fun `percentage extracts correct portion`() {
+        assertEquals("10.00", KmpMoney.of("100.00", Currency.USD).percentage(10).numberStrippedString)
+    }
+
+    @Test
+    fun `percentage with fractional rate`() {
+        assertEquals("17.50", KmpMoney.of("100.00", Currency.USD).percentage(17.5).numberStrippedString)
+    }
+
+    @Test
+    fun `percentage of zero is zero`() {
+        assertTrue(KmpMoney.of("0.00", Currency.USD).percentage(20).isZero())
+    }
+
+    @Test
+    fun `percentage preserves currency`() {
+        assertEquals(Currency.EUR, KmpMoney.of("200.00", Currency.EUR).percentage(10).currency)
+    }
+
+    // ── addPercentage ─────────────────────────────────────────────────────────
+
+    @Test
+    fun `addPercentage adds tax to base amount`() {
+        assertEquals("110.00", KmpMoney.of("100.00", Currency.USD).addPercentage(10).numberStrippedString)
+    }
+
+    @Test
+    fun `addPercentage with 20 percent`() {
+        assertEquals("120.00", KmpMoney.of("100.00", Currency.USD).addPercentage(20).numberStrippedString)
+    }
+
+    @Test
+    fun `addPercentage zero percent returns same value`() {
+        assertEquals("100.00", KmpMoney.of("100.00", Currency.USD).addPercentage(0).numberStrippedString)
+    }
+
+    // ── subtractPercentage ────────────────────────────────────────────────────
+
+    @Test
+    fun `subtractPercentage recovers base from tax-inclusive amount`() {
+        assertEquals("100.00", KmpMoney.of("110.00", Currency.USD).subtractPercentage(10).numberStrippedString)
+    }
+
+    @Test
+    fun `subtractPercentage with 20 percent`() {
+        assertEquals("100.00", KmpMoney.of("120.00", Currency.USD).subtractPercentage(20).numberStrippedString)
+    }
+
+    @Test
+    fun `addPercentage and subtractPercentage are inverse operations`() {
+        val base = KmpMoney.of("99.99", Currency.USD)
+        assertEquals(base.numberStrippedString, base.addPercentage(15).subtractPercentage(15).numberStrippedString)
+    }
+
     // ── round ─────────────────────────────────────────────────────────────────
 
     @Test
