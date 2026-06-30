@@ -16,6 +16,7 @@ kover = "0.9.8"
 detekt = "1.23.8"
 compose = "1.11.1"
 big-num = "0.3.10"
+coroutines = "1.10.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -36,6 +37,8 @@ androidx-compose-material3 = { group = "androidx.compose.material3", name = "mat
 compose-components-resources = { group = "org.jetbrains.compose.components", name = "components-resources", version.ref = "compose" }
 runtime = { group = "org.jetbrains.compose.runtime", name = "runtime", version.ref = "compose" }
 big-num = { group = "com.ionspin.kotlin", name = "bignum", version.ref = "big-num" }
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
