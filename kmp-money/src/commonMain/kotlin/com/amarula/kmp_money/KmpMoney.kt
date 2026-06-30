@@ -27,6 +27,56 @@ data class KmpMoney(private val amount: BigDecimal, val currency: Currency) : Co
     }
 
     /**
+     * Returns a formatted string with fine-grained control over the label and grouping.
+     *
+     * @param showSymbol Whether to include the currency label (symbol or code). Default `true`.
+     * @param useCode When `true`, uses the ISO currency code (e.g. `"USD"`) instead of the symbol
+     *   (e.g. `"$"`). Has no effect when [showSymbol] is `false`. Default `false`.
+     * @param groupingSeparator Character used to separate thousands groups. Default `','`.
+     */
+    fun format(
+        showSymbol: Boolean = true,
+        useCode: Boolean = false,
+        groupingSeparator: Char = ','
+    ): String {
+        val formatted = number.formatMoney(currency.decimalPlaces, groupingSeparator)
+        if (!showSymbol) return formatted
+        val label = if (useCode) currency.name else currency.currencySymbol.ifEmpty { currency.name }
+        return if (currency.symbolIsPrefix) "$label $formatted" else "$formatted $label"
+    }
+
+    /**
+     * Returns a compact human-readable string that abbreviates large amounts with K/M/B suffixes.
+     * Amounts below 1 000 are formatted at full currency precision.
+     *
+     * Examples: `"$ 1.5K"`, `"$ 2.3M"`, `"$ 4.1B"`, `"$ 99.99"`.
+     */
+    fun toCompactString(): String {
+        val absAmount = amount.abs()
+        val billion = BigDecimal.parseString("1000000000")
+        val million = BigDecimal.parseString("1000000")
+        val thousand = BigDecimal.parseString("1000")
+
+        val (divisor, suffix) = when {
+            absAmount >= billion -> Pair(billion, "B")
+            absAmount >= million -> Pair(million, "M")
+            absAmount >= thousand -> Pair(thousand, "K")
+            else -> Pair(null, "")
+        }
+
+        val label = currency.currencySymbol.ifEmpty { currency.name }
+        val formatted = if (divisor == null) {
+            number.formatMoney(currency.decimalPlaces)
+        } else {
+            val compact = amount.divide(divisor, DecimalMode(34L, RoundingMode.ROUND_HALF_AWAY_FROM_ZERO))
+                .roundToDigitPositionAfterDecimalPoint(1, RoundingMode.ROUND_HALF_AWAY_FROM_ZERO)
+                .toPlainString()
+            "$compact$suffix"
+        }
+        return if (currency.symbolIsPrefix) "$label $formatted" else "$formatted $label"
+    }
+
+    /**
      * Adds [other] to this amount and returns the result.
      *
      * @throws IllegalArgumentException if [other] has a different currency.
