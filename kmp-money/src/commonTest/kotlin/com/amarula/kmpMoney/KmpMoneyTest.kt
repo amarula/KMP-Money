@@ -441,6 +441,55 @@ class KmpMoneyTest {
         assertEquals("-10.00", (-KmpMoney.of("10.00", Currency.USD)).numberStrippedString)
     }
 
+    // ── toMap / fromMap ───────────────────────────────────────────────────────
+
+    @Test
+    fun `toMap contains amount and currency keys`() {
+        val map = KmpMoney.of("12.50", Currency.USD).toMap()
+        assertEquals("12.50", map["amount"])
+        assertEquals("USD", map["currency"])
+    }
+
+    @Test
+    fun `toMap amount is rounded to currency decimal places`() {
+        assertEquals("10.56", KmpMoney.of("10.555", Currency.USD).toMap()["amount"])
+    }
+
+    @Test
+    fun `toMap and fromMap are inverse operations`() {
+        val original = KmpMoney.of("42.00", Currency.EUR)
+        val restored = KmpMoney.fromMap(original.toMap())
+        assertEquals(original.numberStrippedString, restored.numberStrippedString)
+        assertEquals(original.currency, restored.currency)
+    }
+
+    @Test
+    fun `fromMap resolves currency correctly`() {
+        val m = KmpMoney.fromMap(mapOf("amount" to "5.00", "currency" to "GBP"))
+        assertEquals(Currency.GBP, m.currency)
+        assertEquals("5.00", m.numberStrippedString)
+    }
+
+    @Test
+    fun `fromMap falls back to UNKNOWN for unrecognised currency`() {
+        val m = KmpMoney.fromMap(mapOf("amount" to "1.00", "currency" to "XYZ"))
+        assertEquals(Currency.UNKNOWN, m.currency)
+    }
+
+    @Test
+    fun `fromMap throws when amount key is missing`() {
+        assertFailsWith<IllegalArgumentException> {
+            KmpMoney.fromMap(mapOf("currency" to "USD"))
+        }
+    }
+
+    @Test
+    fun `fromMap throws when currency key is missing`() {
+        assertFailsWith<IllegalArgumentException> {
+            KmpMoney.fromMap(mapOf("amount" to "1.00"))
+        }
+    }
+
     // ── format ────────────────────────────────────────────────────────────────
 
     @Test
