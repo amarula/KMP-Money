@@ -187,6 +187,19 @@ data class KmpMoney(private val amount: BigDecimal, val currency: Currency) : Co
     val numberStripped: BigDecimal
         get() = BigDecimal.parseString(numberStrippedString)
 
+    /**
+     * Returns a new [KmpMoney] with the amount rounded to [Currency.decimalPlaces] using [roundingMode].
+     *
+     * @param roundingMode Rounding strategy to apply.
+     */
+    fun round(roundingMode: RoundingMode): KmpMoney {
+        val rounded = amount.roundToDigitPositionAfterDecimalPoint(
+            currency.decimalPlaces.toLong(),
+            roundingMode
+        )
+        return KmpMoney(rounded, currency)
+    }
+
     /** Returns `true` if the amount is zero or negative. */
     fun isNegativeOrZero(): Boolean = amount <= BigDecimal.ZERO
 
