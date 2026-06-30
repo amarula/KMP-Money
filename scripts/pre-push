@@ -1,0 +1,15 @@
+#!/bin/bash
+set -e
+echo "*******************************"
+echo "Running git pre-push hook"
+echo "*******************************"
+
+# Navigate to frontend where gradlew lives
+cd "$(git rev-parse --show-toplevel)/frontend"
+
+./gradlew ktlintCheck
+RESULT=$?
+
+# return 1 exit code if running checks fails
+[ $RESULT -ne 0 ] && exit 1
+exit 0
