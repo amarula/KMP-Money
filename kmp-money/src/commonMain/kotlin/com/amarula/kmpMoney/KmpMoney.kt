@@ -1,6 +1,7 @@
 package com.amarula.kmpMoney
 
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
+import com.ionspin.kotlin.bignum.decimal.DecimalMode
 import com.ionspin.kotlin.bignum.decimal.RoundingMode
 
 /**
@@ -36,8 +37,135 @@ data class KmpMoney(private val amount: BigDecimal, val currency: Currency) : Co
     }
 
     /**
-     * The amount rounded to [Currency.decimalPlaces] decimal places (half-ceiling) as a plain string,
-     * with no grouping separators.
+     * Subtracts [other] from this amount and returns the result.
+     *
+     * @throws IllegalArgumentException if [other] has a different currency.
+     */
+    fun subtract(other: KmpMoney): KmpMoney {
+        requireSameCurrency(other)
+        return KmpMoney(this.amount - other.amount, currency)
+    }
+
+    /**
+     * Multiplies this amount by [factor] and returns the result.
+     *
+     * @param factor [BigDecimal] multiplier.
+     */
+    fun multiply(factor: BigDecimal): KmpMoney = KmpMoney(this.amount * factor, currency)
+
+    /**
+     * Multiplies this amount by [factor] and returns the result.
+     *
+     * @param factor Numeric multiplier; converted to [BigDecimal] via its string representation.
+     */
+    fun multiply(factor: Number): KmpMoney = multiply(BigDecimal.parseString(factor.toString()))
+
+    /**
+     * Divides this amount by [divisor] and returns the result, rounded to [Currency.decimalPlaces].
+     *
+     * @param divisor [BigDecimal] divisor; must not be zero.
+     * @param roundingMode Rounding strategy applied after division (default: half-away-from-zero).
+     */
+    fun divide(
+        divisor: BigDecimal,
+        roundingMode: RoundingMode = RoundingMode.ROUND_HALF_AWAY_FROM_ZERO
+    ): KmpMoney {
+        val result = amount.divide(divisor, DecimalMode(DECIMAL128_PRECISION, roundingMode))
+            .roundToDigitPositionAfterDecimalPoint(currency.decimalPlaces.toLong(), roundingMode)
+        return KmpMoney(result, currency)
+    }
+
+    /**
+     * Divides this amount by [divisor] and returns the result, rounded to [Currency.decimalPlaces].
+     *
+     * @param divisor Numeric divisor; converted to [BigDecimal] via its string representation.
+     * @param roundingMode Rounding strategy applied after division (default: half-away-from-zero).
+     */
+    fun divide(
+        divisor: Number,
+        roundingMode: RoundingMode = RoundingMode.ROUND_HALF_AWAY_FROM_ZERO
+    ): KmpMoney = divide(BigDecimal.parseString(divisor.toString()), roundingMode)
+
+    /** Returns a new [KmpMoney] with the sign of this amount flipped. */
+    fun negate(): KmpMoney = KmpMoney(amount.negate(), currency)
+
+    /** Returns a new [KmpMoney] with the absolute value of this amount. */
+    fun abs(): KmpMoney = KmpMoney(amount.abs(), currency)
+
+    /**
+     * Returns the remainder of dividing this amount by [divisor], truncating towards zero.
+     *
+     * @param divisor [BigDecimal] divisor; must not be zero.
+     */
+    fun remainder(divisor: BigDecimal): KmpMoney {
+        val whole = amount.divide(
+            divisor,
+            DecimalMode(DECIMAL128_PRECISION, RoundingMode.ROUND_HALF_AWAY_FROM_ZERO)
+        )
+            .roundToDigitPositionAfterDecimalPoint(0, RoundingMode.TOWARDS_ZERO)
+        return KmpMoney(amount - whole * divisor, currency)
+    }
+
+    /**
+     * Returns the remainder of dividing this amount by [divisor], truncating towards zero.
+     *
+     * @param divisor Numeric divisor; converted to [BigDecimal] via its string representation.
+     */
+    fun remainder(divisor: Number): KmpMoney = remainder(BigDecimal.parseString(divisor.toString()))
+
+    /**
+     * Distributes this money across [ratios] proportionally without losing any minor unit.
+     * Leftover pennies are assigned to the first slots.
+     *
+     * @param ratios Non-empty list of non-negative integers representing relative shares.
+     * @throws IllegalArgumentException if [ratios] is empty, contains negative values, or sums to zero.
+     */
+    fun allocate(ratios: List<Int>): List<KmpMoney> {
+        require(ratios.isNotEmpty()) { "Ratios must not be empty" }
+        require(ratios.all { it >= 0 }) { "Ratios must be non-negative" }
+        val totalRatio = ratios.sumOf { it }.toLong()
+        require(totalRatio > 0) { "Sum of ratios must be positive" }
+
+        val scale = currency.decimalPlaces
+        val factor = BigDecimal.parseString("1" + "0".repeat(scale))
+        val totalMinor = (amount * factor)
+            .roundToDigitPositionAfterDecimalPoint(0, RoundingMode.ROUND_HALF_AWAY_FROM_ZERO)
+            .longValue(exactRequired = false)
+        val isNeg = totalMinor < 0
+        val absMinor = if (isNeg) -totalMinor else totalMinor
+
+        val allocated = LongArray(ratios.size) { i -> absMinor * ratios[i] / totalRatio }
+        var leftover = absMinor - allocated.sum()
+        var idx = 0
+        while (leftover > 0 && idx < allocated.size) {
+            allocated[idx++] += 1
+            leftover--
+        }
+
+        return allocated.map { minor ->
+            val signedMinor = if (isNeg) -minor else minor
+            KmpMoney(BigDecimal.fromLong(signedMinor) / factor, currency)
+        }
+    }
+
+    /** Operator alias for [add]. @throws IllegalArgumentException on currency mismatch. */
+    operator fun plus(other: KmpMoney): KmpMoney = add(other)
+
+    /** Operator alias for [subtract]. @throws IllegalArgumentException on currency mismatch. */
+    operator fun minus(other: KmpMoney): KmpMoney = subtract(other)
+
+    /** Operator alias for [multiply] with a [Number] factor. */
+    operator fun times(factor: Number): KmpMoney = multiply(factor)
+
+    /** Operator alias for [multiply] with a [BigDecimal] factor. */
+    operator fun times(factor: BigDecimal): KmpMoney = multiply(factor)
+
+    /** Operator alias for [negate]. */
+    operator fun unaryMinus(): KmpMoney = negate()
+
+    /**
+     * The amount rounded to [Currency.decimalPlaces] decimal places (half-away-from-zero) as a
+     * plain string, with no grouping separators.
      */
     val numberStrippedString: String
         get() {
@@ -86,6 +214,11 @@ data class KmpMoney(private val amount: BigDecimal, val currency: Currency) : Co
     override fun toString(): String = "${currency.name} ${amount.toPlainString()}"
 
     companion object {
+        // IEEE 754 Decimal128 mandates 34 significant decimal digits of precision.
+        // Using this as the intermediate precision for divide/remainder prevents
+        // silent truncation while staying consistent with the standard.
+        private const val DECIMAL128_PRECISION = 34L
+
         /**
          * Creates a [KmpMoney] from a decimal string and a [Currency].
          *
