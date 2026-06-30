@@ -345,6 +345,40 @@ data class KmpMoney(private val amount: BigDecimal, val currency: Currency) : Co
     }
 
     /**
+     * Returns this amount if it is greater than or equal to [min], otherwise returns [min].
+     *
+     * @throws IllegalArgumentException if [min] has a different currency.
+     */
+    fun coerceAtLeast(min: KmpMoney): KmpMoney {
+        requireSameCurrency(min)
+        return if (this.amount >= min.amount) this else min
+    }
+
+    /**
+     * Returns this amount if it is less than or equal to [max], otherwise returns [max].
+     *
+     * @throws IllegalArgumentException if [max] has a different currency.
+     */
+    fun coerceAtMost(max: KmpMoney): KmpMoney {
+        requireSameCurrency(max)
+        return if (this.amount <= max.amount) this else max
+    }
+
+    /**
+     * Constrains this amount to the [[min], [max]] range.
+     * Equivalent to `coerceAtLeast(min).coerceAtMost(max)`.
+     *
+     * @throws IllegalArgumentException if [min] or [max] has a different currency.
+     * @throws IllegalArgumentException if [min] is greater than [max].
+     */
+    fun coerceIn(min: KmpMoney, max: KmpMoney): KmpMoney {
+        requireSameCurrency(min)
+        requireSameCurrency(max)
+        require(min.amount <= max.amount) { "min must not be greater than max" }
+        return coerceAtLeast(min).coerceAtMost(max)
+    }
+
+    /**
      * Returns `true` if this amount is strictly between [min] and [max] (exclusive).
      *
      * @throws IllegalArgumentException if [min] or [max] has a different currency.
