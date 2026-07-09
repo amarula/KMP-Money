@@ -16,6 +16,24 @@
       "message": "What is the use case to use big number for concurrency?",
       "revId": "dc6f9d14926ecf815eeb142652ac933d87b4bb10",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "d632922e_7abb641c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1039646
+      },
+      "writtenOn": "2026-07-09T13:04:00Z",
+      "side": 1,
+      "message": "Java money is built using big number and we used that as blue print.",
+      "parentUuid": "6a5cd41a_c53d702a",
+      "revId": "dc6f9d14926ecf815eeb142652ac933d87b4bb10",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
   ]
 }
