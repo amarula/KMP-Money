@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "aea21856_816ad156",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1037987
+      },
+      "writtenOn": "2026-07-09T10:57:18Z",
+      "side": 1,
+      "message": "This code was added the commit before. Even without a proper test before.",
+      "revId": "8db3ce48e067b329984e8a98651cd693c310bd78",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
