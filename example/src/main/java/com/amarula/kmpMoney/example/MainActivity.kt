@@ -4,16 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import com.amarula.kmpMoney.Currency
 import com.amarula.kmpMoney.KmpMoney
 import com.amarula.kmpMoney.example.ui.theme.KMPMoneyTheme
 
@@ -21,18 +18,20 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val money = KmpMoney()
+
+        val price = KmpMoney.of("19.99", Currency.USD)
+        val tax = KmpMoney.of("1.50", Currency.USD)
+        val total = price.add(tax)
+
         setContent {
             KMPMoneyTheme {
-                var greeting by remember { mutableStateOf("") }
-                LaunchedEffect(Unit) {
-                    greeting = money.greetings()
-                }
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Text(
-                        greeting,
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    Column(modifier = Modifier.padding(innerPadding)) {
+                        Text("Currency: ${price.currency.name}")
+                        Text("Price:    ${price.toMoneyString()}")
+                        Text("Tax:      ${tax.toMoneyString()}")
+                        Text("Total:    ${total.toMoneyString()}")
+                    }
                 }
             }
         }
