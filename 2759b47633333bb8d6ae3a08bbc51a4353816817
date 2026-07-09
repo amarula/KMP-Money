@@ -16,6 +16,24 @@
       "message": "This patch is doing example + code. Why should be go this way?",
       "revId": "2759b47633333bb8d6ae3a08bbc51a4353816817",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "afb32d5c_e0e5238c",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 12
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1039646
+      },
+      "writtenOn": "2026-07-09T13:02:42Z",
+      "side": 1,
+      "message": "I just copied everything from travel smart to this new project without changing anything.",
+      "parentUuid": "c85cc2e6_1a64b7da",
+      "revId": "2759b47633333bb8d6ae3a08bbc51a4353816817",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
   ]
 }
