@@ -51,6 +51,24 @@
       "message": "Normal math and multiplication using standard I refer is not enough?",
       "revId": "dc6f9d14926ecf815eeb142652ac933d87b4bb10",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "03d9dbbc_32360837",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 11
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1039648
+      },
+      "writtenOn": "2026-07-09T13:58:14Z",
+      "side": 1,
+      "message": "Its a common practice to use BigDecimal when working with money-type of values in Java. This added library is providing multiplatform implementation of the java BigDecimal, so it can run on multiplatform projects. As Ronnie mentioned, the Java Money library that we used before used this approach and we follow. This library is basically meant as KMP variant of the plain java Money library, so thus the same approaches.",
+      "parentUuid": "f9d9e981_1cc7bfe2",
+      "revId": "dc6f9d14926ecf815eeb142652ac933d87b4bb10",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
   ]
 }
