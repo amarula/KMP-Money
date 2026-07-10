@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "f425e38b_f255e7a1",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 14
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1037987
+      },
+      "writtenOn": "2026-07-10T05:56:35Z",
+      "side": 1,
+      "message": "@ronnie.otieno@amarulasolutions.com each add should be a commit. Avoid list",
+      "revId": "fc1d7b4590ee4bac5ea324c062aa17bd283ef798",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
