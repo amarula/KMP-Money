@@ -213,6 +213,62 @@ class KmpMoneyTest {
         }
     }
 
+    // ── subtract ──────────────────────────────────────────────────────────────
+
+    @Test
+    fun `subtract returns difference`() {
+        val a = KmpMoney.of("10.00", Currency.USD)
+        val b = KmpMoney.of("3.25", Currency.USD)
+        assertEquals("6.75", a.subtract(b).numberStrippedString)
+    }
+
+    @Test
+    fun `subtract with negative result`() {
+        assertEquals(
+            "-2.00",
+            KmpMoney.of("3.00", Currency.USD)
+                .subtract(KmpMoney.of("5.00", Currency.USD)).numberStrippedString
+        )
+    }
+
+    @Test
+    fun `subtract throws on currency mismatch`() {
+        assertFailsWith<IllegalArgumentException> {
+            KmpMoney.of("5.00", Currency.USD).subtract(KmpMoney.of("1.00", Currency.EUR))
+        }
+    }
+
+    // ── multiply ──────────────────────────────────────────────────────────────
+
+    @Test
+    fun `multiply by Int`() {
+        assertEquals("30.00", KmpMoney.of("10.00", Currency.USD).multiply(3).numberStrippedString)
+    }
+
+    @Test
+    fun `multiply by Double`() {
+        assertEquals("15.00", KmpMoney.of("10.00", Currency.USD).multiply(1.5).numberStrippedString)
+    }
+
+    @Test
+    fun `multiply by BigDecimal`() {
+        assertEquals(
+            "15.00",
+            KmpMoney.of("10.00", Currency.USD)
+                .multiply(BigDecimal.parseString("1.5")).numberStrippedString
+        )
+    }
+
+    @Test
+    fun `multiply by zero gives zero`() {
+        assertTrue(KmpMoney.of("99.99", Currency.USD).multiply(0).isNegativeOrZero())
+    }
+
+    @Test
+    fun `multiply preserves currency`() {
+        assertEquals(Currency.GBP, KmpMoney.of("10.00", Currency.GBP).multiply(2).currency)
+    }
+
     // ── toString ──────────────────────────────────────────────────────────────
 
     @Test
