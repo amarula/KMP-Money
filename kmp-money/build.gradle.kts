@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.ktlint)
     alias(libs.plugins.kover)
+    alias(libs.plugins.detekt)
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.kotlin.compose)
 }
@@ -48,4 +49,15 @@ compose.resources {
     packageOfResClass = "com.amarula.kmpMoney.resources"
     publicResClass = true
     generateResClass = always
+}
+
+detekt {
+    buildUponDefaultConfig = true
+    parallel = true
+
+    config.setFrom(rootProject.files("config/detekt.yml"))
+
+    source.setFrom(
+        files("src/commonMain/")
+    )
 }

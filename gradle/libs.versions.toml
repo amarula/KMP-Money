@@ -13,6 +13,7 @@ activityCompose = "1.12.0"
 composeBom = "2024.09.00"
 ktlint = "14.2.0"
 kover = "0.9.8"
+detekt = "1.23.8"
 compose = "1.11.1"
 big-num = "0.3.10"
 
@@ -44,5 +45,6 @@ kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref 
 android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose" }
 

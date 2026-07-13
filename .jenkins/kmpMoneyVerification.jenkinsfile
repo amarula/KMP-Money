@@ -83,6 +83,25 @@ node('android-build') {
                         ./gradlew clean build -x check --stacktrace
                     '''
                 },
+                'Detekt': {
+                    try {
+                        String script = './gradlew detekt'
+                        Integer lintRetCode = sh returnStatus: true, script: script
+                        if (lintRetCode != 0) {
+                            error('Build failed on Detekt task')
+                        }
+                    } finally {
+                        /* Look for lint results report and upload if exists */
+                        Integer ret = sh(
+                            script: "find . -name ${detektReportName} | grep .",
+                            returnStatus: true
+                        )
+                        if (ret == 0) {
+                            archiveArtifacts "${detektReportPath}${detektReportName}"
+                            recordIssues(sourceCodeRetention: 'LAST_BUILD', tools: [detekt(pattern: "${detektReportPath}detekt.xml")])
+                        }
+                    }
+                },
                 'Test': {
                     try {
                         sh '''#!/bin/bash -il

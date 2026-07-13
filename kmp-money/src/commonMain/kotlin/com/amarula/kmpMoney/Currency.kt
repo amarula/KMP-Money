@@ -116,6 +116,7 @@ import org.jetbrains.compose.resources.getString
  * @property countryCode ISO 3166-1 alpha-2 country code used to resolve the flag image, or empty
  * for supranational currencies.
  */
+@Suppress("MagicNumber")
 enum class Currency(
     val decimalPlaces: Int,
     val currencySymbol: String,
