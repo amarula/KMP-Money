@@ -94,6 +94,27 @@ data class KmpMoney(private val amount: BigDecimal, val currency: Currency) : Co
     fun abs(): KmpMoney = KmpMoney(amount.abs(), currency)
 
     /**
+     * Returns the remainder of dividing this amount by [divisor], truncating towards zero.
+     *
+     * @param divisor [BigDecimal] divisor; must not be zero.
+     */
+    fun remainder(divisor: BigDecimal): KmpMoney {
+        val whole = amount.divide(
+            divisor,
+            DecimalMode(DECIMAL128_PRECISION, RoundingMode.ROUND_HALF_AWAY_FROM_ZERO)
+        )
+            .roundToDigitPositionAfterDecimalPoint(0, RoundingMode.TOWARDS_ZERO)
+        return KmpMoney(amount - whole * divisor, currency)
+    }
+
+    /**
+     * Returns the remainder of dividing this amount by [divisor], truncating towards zero.
+     *
+     * @param divisor Numeric divisor; converted to [BigDecimal] via its string representation.
+     */
+    fun remainder(divisor: Number): KmpMoney = remainder(BigDecimal.parseString(divisor.toString()))
+
+    /**
      * The amount rounded to [Currency.decimalPlaces] decimal places (half-away-from-zero) as a
      * plain string, with no grouping separators.
      */
