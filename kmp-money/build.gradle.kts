@@ -61,3 +61,13 @@ detekt {
         files("src/commonMain/")
     )
 }
+
+kover {
+    reports {
+        filters {
+            excludes {
+                packages("com.amarula.kmpMoney.resources")
+            }
+        }
+    }
+}
