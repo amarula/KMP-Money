@@ -1,6 +1,7 @@
 package com.amarula.kmpMoney
 
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
+import com.ionspin.kotlin.bignum.decimal.DecimalMode
 import com.ionspin.kotlin.bignum.decimal.RoundingMode
 
 /**
@@ -60,6 +61,32 @@ data class KmpMoney(private val amount: BigDecimal, val currency: Currency) : Co
     fun multiply(factor: Number): KmpMoney = multiply(BigDecimal.parseString(factor.toString()))
 
     /**
+     * Divides this amount by [divisor] and returns the result, rounded to [Currency.decimalPlaces].
+     *
+     * @param divisor [BigDecimal] divisor; must not be zero.
+     * @param roundingMode Rounding strategy applied after division (default: half-away-from-zero).
+     */
+    fun divide(
+        divisor: BigDecimal,
+        roundingMode: RoundingMode = RoundingMode.ROUND_HALF_AWAY_FROM_ZERO
+    ): KmpMoney {
+        val result = amount.divide(divisor, DecimalMode(DECIMAL128_PRECISION, roundingMode))
+            .roundToDigitPositionAfterDecimalPoint(currency.decimalPlaces.toLong(), roundingMode)
+        return KmpMoney(result, currency)
+    }
+
+    /**
+     * Divides this amount by [divisor] and returns the result, rounded to [Currency.decimalPlaces].
+     *
+     * @param divisor Numeric divisor; converted to [BigDecimal] via its string representation.
+     * @param roundingMode Rounding strategy applied after division (default: half-away-from-zero).
+     */
+    fun divide(
+        divisor: Number,
+        roundingMode: RoundingMode = RoundingMode.ROUND_HALF_AWAY_FROM_ZERO
+    ): KmpMoney = divide(BigDecimal.parseString(divisor.toString()), roundingMode)
+
+    /**
      * The amount rounded to [Currency.decimalPlaces] decimal places (half-away-from-zero) as a
      * plain string, with no grouping separators.
      */
@@ -111,6 +138,11 @@ data class KmpMoney(private val amount: BigDecimal, val currency: Currency) : Co
 
     companion object {
         private const val GROUPING_SIZE = 3
+
+        // IEEE 754 Decimal128 mandates 34 significant decimal digits of precision.
+        // Using this as the intermediate precision for divide/remainder prevents
+        // silent truncation while staying consistent with the standard.
+        private const val DECIMAL128_PRECISION = 34L
 
         /**
          * Creates a [KmpMoney] from a decimal string and a [Currency].
