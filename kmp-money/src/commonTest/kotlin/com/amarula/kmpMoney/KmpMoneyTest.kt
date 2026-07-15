@@ -316,6 +316,18 @@ class KmpMoneyTest {
         assertTrue(KmpMoney.of("0", Currency.USD).negate().isNegativeOrZero())
     }
 
+    // ── abs ───────────────────────────────────────────────────────────────────
+
+    @Test
+    fun `abs of negative returns positive`() {
+        assertEquals("7.50", KmpMoney.of("-7.50", Currency.USD).abs().numberStrippedString)
+    }
+
+    @Test
+    fun `abs of positive is unchanged`() {
+        assertEquals("7.50", KmpMoney.of("7.50", Currency.USD).abs().numberStrippedString)
+    }
+
     // ── toString ──────────────────────────────────────────────────────────────
 
     @Test
