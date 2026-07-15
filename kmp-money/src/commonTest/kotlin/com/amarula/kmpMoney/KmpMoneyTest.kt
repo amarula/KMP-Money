@@ -299,6 +299,23 @@ class KmpMoneyTest {
         assertEquals(Currency.EUR, KmpMoney.of("9.00", Currency.EUR).divide(3).currency)
     }
 
+    // ── negate ────────────────────────────────────────────────────────────────
+
+    @Test
+    fun `negate flips positive to negative`() {
+        assertEquals("-10.00", KmpMoney.of("10.00", Currency.USD).negate().numberStrippedString)
+    }
+
+    @Test
+    fun `negate flips negative to positive`() {
+        assertEquals("5.00", KmpMoney.of("-5.00", Currency.USD).negate().numberStrippedString)
+    }
+
+    @Test
+    fun `negate of zero stays zero`() {
+        assertTrue(KmpMoney.of("0", Currency.USD).negate().isNegativeOrZero())
+    }
+
     // ── toString ──────────────────────────────────────────────────────────────
 
     @Test
