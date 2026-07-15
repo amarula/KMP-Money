@@ -89,6 +89,9 @@ data class KmpMoney(private val amount: BigDecimal, val currency: Currency) : Co
     /** Returns a new [KmpMoney] with the sign of this amount flipped. */
     fun negate(): KmpMoney = KmpMoney(amount.negate(), currency)
 
+    /** Returns a new [KmpMoney] with the absolute value of this amount. */
+    fun abs(): KmpMoney = KmpMoney(amount.abs(), currency)
+
     /**
      * The amount rounded to [Currency.decimalPlaces] decimal places (half-away-from-zero) as a
      * plain string, with no grouping separators.
