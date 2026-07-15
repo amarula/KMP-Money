@@ -344,6 +344,58 @@ class KmpMoneyTest {
         assertEquals("1.50", KmpMoney.of("10.50", Currency.USD).remainder(3).numberStrippedString)
     }
 
+    // ── allocate ──────────────────────────────────────────────────────────────
+
+    @Test
+    fun `allocate splits evenly`() {
+        val parts = KmpMoney.of("10.00", Currency.USD).allocate(listOf(1, 2, 1))
+        assertEquals("2.50", parts[0].numberStrippedString)
+        assertEquals("5.00", parts[1].numberStrippedString)
+        assertEquals("2.50", parts[2].numberStrippedString)
+    }
+
+    @Test
+    fun `allocate loses no pennies on uneven split`() {
+        val total = KmpMoney.of("10.01", Currency.USD)
+        val parts = total.allocate(listOf(1, 1, 1))
+        val minorSum = parts.sumOf {
+            it.number.multiply(BigDecimal.parseString("100")).longValue(exactRequired = false)
+        }
+        assertEquals(1001L, minorSum)
+        // First slot gets the extra penny
+        assertEquals("3.34", parts[0].numberStrippedString)
+        assertEquals("3.34", parts[1].numberStrippedString)
+        assertEquals("3.33", parts[2].numberStrippedString)
+    }
+
+    @Test
+    fun `allocate handles negative total`() {
+        val parts = KmpMoney.of("-9.00", Currency.USD).allocate(listOf(1, 2))
+        assertEquals("-3.00", parts[0].numberStrippedString)
+        assertEquals("-6.00", parts[1].numberStrippedString)
+    }
+
+    @Test
+    fun `allocate throws on empty ratios`() {
+        assertFailsWith<IllegalArgumentException> {
+            KmpMoney.of("10.00", Currency.USD).allocate(emptyList())
+        }
+    }
+
+    @Test
+    fun `allocate throws on negative ratio`() {
+        assertFailsWith<IllegalArgumentException> {
+            KmpMoney.of("10.00", Currency.USD).allocate(listOf(1, -1))
+        }
+    }
+
+    @Test
+    fun `allocate throws when all ratios sum to zero`() {
+        assertFailsWith<IllegalArgumentException> {
+            KmpMoney.of("10.00", Currency.USD).allocate(listOf(0, 0))
+        }
+    }
+
     // ── toString ──────────────────────────────────────────────────────────────
 
     @Test
