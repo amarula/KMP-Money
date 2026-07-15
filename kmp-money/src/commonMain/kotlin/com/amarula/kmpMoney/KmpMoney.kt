@@ -115,6 +115,41 @@ data class KmpMoney(private val amount: BigDecimal, val currency: Currency) : Co
     fun remainder(divisor: Number): KmpMoney = remainder(BigDecimal.parseString(divisor.toString()))
 
     /**
+     * Distributes this money across [ratios] proportionally without losing any minor unit.
+     * Leftover pennies are assigned to the first slots.
+     *
+     * @param ratios Non-empty list of non-negative integers representing relative shares.
+     * @throws IllegalArgumentException if [ratios] is empty, contains negative values, or sums to zero.
+     */
+    fun allocate(ratios: List<Int>): List<KmpMoney> {
+        require(ratios.isNotEmpty()) { "Ratios must not be empty" }
+        require(ratios.all { it >= 0 }) { "Ratios must be non-negative" }
+        val totalRatio = ratios.sumOf { it }.toLong()
+        require(totalRatio > 0) { "Sum of ratios must be positive" }
+
+        val scale = currency.decimalPlaces
+        val factor = BigDecimal.parseString("1" + "0".repeat(scale))
+        val totalMinor = (amount * factor)
+            .roundToDigitPositionAfterDecimalPoint(0, RoundingMode.ROUND_HALF_AWAY_FROM_ZERO)
+            .longValue(exactRequired = false)
+        val isNeg = totalMinor < 0
+        val absMinor = if (isNeg) -totalMinor else totalMinor
+
+        val allocated = LongArray(ratios.size) { i -> absMinor * ratios[i] / totalRatio }
+        var leftover = absMinor - allocated.sum()
+        var idx = 0
+        while (leftover > 0 && idx < allocated.size) {
+            allocated[idx++] += 1
+            leftover--
+        }
+
+        return allocated.map { minor ->
+            val signedMinor = if (isNeg) -minor else minor
+            KmpMoney(BigDecimal.fromLong(signedMinor) / factor, currency)
+        }
+    }
+
+    /**
      * The amount rounded to [Currency.decimalPlaces] decimal places (half-away-from-zero) as a
      * plain string, with no grouping separators.
      */
