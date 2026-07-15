@@ -328,6 +328,22 @@ class KmpMoneyTest {
         assertEquals("7.50", KmpMoney.of("7.50", Currency.USD).abs().numberStrippedString)
     }
 
+    // ── remainder ─────────────────────────────────────────────────────────────
+
+    @Test
+    fun `remainder BigDecimal returns modulo`() {
+        assertEquals(
+            "1.00",
+            KmpMoney.of("10.00", Currency.USD)
+                .remainder(BigDecimal.parseString("3")).numberStrippedString
+        )
+    }
+
+    @Test
+    fun `remainder Number overload`() {
+        assertEquals("1.50", KmpMoney.of("10.50", Currency.USD).remainder(3).numberStrippedString)
+    }
+
     // ── toString ──────────────────────────────────────────────────────────────
 
     @Test
