@@ -396,6 +396,57 @@ class KmpMoneyTest {
         }
     }
 
+    // ── operator overloads ────────────────────────────────────────────────────
+
+    @Test
+    fun `plus operator delegates to add`() {
+        assertEquals(
+            "15.00",
+            (
+                KmpMoney.of("10.00", Currency.USD) + KmpMoney.of(
+                    "5.00",
+                    Currency.USD
+                )
+                ).numberStrippedString
+        )
+    }
+
+    @Test
+    fun `minus operator delegates to subtract`() {
+        assertEquals(
+            "5.00",
+            (
+                KmpMoney.of("10.00", Currency.USD) - KmpMoney.of(
+                    "5.00",
+                    Currency.USD
+                )
+                ).numberStrippedString
+        )
+    }
+
+    @Test
+    fun `times operator with Number`() {
+        assertEquals("20.00", (KmpMoney.of("10.00", Currency.USD) * 2).numberStrippedString)
+    }
+
+    @Test
+    fun `times operator with BigDecimal`() {
+        assertEquals(
+            "25.00",
+            (
+                KmpMoney.of(
+                    "10.00",
+                    Currency.USD
+                ) * BigDecimal.parseString("2.5")
+                ).numberStrippedString
+        )
+    }
+
+    @Test
+    fun `unaryMinus operator delegates to negate`() {
+        assertEquals("-10.00", (-KmpMoney.of("10.00", Currency.USD)).numberStrippedString)
+    }
+
     // ── toString ──────────────────────────────────────────────────────────────
 
     @Test

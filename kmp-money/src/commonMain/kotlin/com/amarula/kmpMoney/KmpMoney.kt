@@ -148,6 +148,21 @@ data class KmpMoney(private val amount: BigDecimal, val currency: Currency) : Co
         }
     }
 
+    /** Operator alias for [add]. @throws IllegalArgumentException on currency mismatch. */
+    operator fun plus(other: KmpMoney): KmpMoney = add(other)
+
+    /** Operator alias for [subtract]. @throws IllegalArgumentException on currency mismatch. */
+    operator fun minus(other: KmpMoney): KmpMoney = subtract(other)
+
+    /** Operator alias for [multiply] with a [Number] factor. */
+    operator fun times(factor: Number): KmpMoney = multiply(factor)
+
+    /** Operator alias for [multiply] with a [BigDecimal] factor. */
+    operator fun times(factor: BigDecimal): KmpMoney = multiply(factor)
+
+    /** Operator alias for [negate]. */
+    operator fun unaryMinus(): KmpMoney = negate()
+
     /**
      * The amount rounded to [Currency.decimalPlaces] decimal places (half-away-from-zero) as a
      * plain string, with no grouping separators.
