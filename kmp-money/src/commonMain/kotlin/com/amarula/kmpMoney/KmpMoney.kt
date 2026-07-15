@@ -12,6 +12,7 @@ import com.ionspin.kotlin.bignum.decimal.RoundingMode
  *
  * @property currency The currency this amount is denominated in.
  */
+@Suppress("TooManyFunctions")
 data class KmpMoney(private val amount: BigDecimal, val currency: Currency) : Comparable<KmpMoney> {
 
     /**
