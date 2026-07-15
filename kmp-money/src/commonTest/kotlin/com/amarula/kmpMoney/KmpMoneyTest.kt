@@ -1,6 +1,7 @@
 package com.amarula.kmpMoney
 
 import com.ionspin.kotlin.bignum.decimal.BigDecimal
+import com.ionspin.kotlin.bignum.decimal.RoundingMode
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -267,6 +268,35 @@ class KmpMoneyTest {
     @Test
     fun `multiply preserves currency`() {
         assertEquals(Currency.GBP, KmpMoney.of("10.00", Currency.GBP).multiply(2).currency)
+    }
+
+    // ── divide ────────────────────────────────────────────────────────────────
+
+    @Test
+    fun `divide by Int rounds to currency scale`() {
+        assertEquals("3.33", KmpMoney.of("10.00", Currency.USD).divide(3).numberStrippedString)
+    }
+
+    @Test
+    fun `divide by BigDecimal`() {
+        assertEquals(
+            "5.00",
+            KmpMoney.of("10.00", Currency.USD)
+                .divide(BigDecimal.parseString("2")).numberStrippedString
+        )
+    }
+
+    @Test
+    fun `divide with explicit CEILING rounding`() {
+        assertEquals(
+            "3.34",
+            KmpMoney.of("10.00", Currency.USD).divide(3, RoundingMode.CEILING).numberStrippedString
+        )
+    }
+
+    @Test
+    fun `divide preserves currency`() {
+        assertEquals(Currency.EUR, KmpMoney.of("9.00", Currency.EUR).divide(3).currency)
     }
 
     // ── toString ──────────────────────────────────────────────────────────────
