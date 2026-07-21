@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "4951ef7c_1faff9ac",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1037987
+      },
+      "writtenOn": "2026-07-21T06:40:51Z",
+      "side": 1,
+      "message": "Please write why is needed and this valid for all operator you add. Plus this add subtract and multiply",
+      "revId": "eddf33b816ff823760c052342ed9998555418f1c",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
