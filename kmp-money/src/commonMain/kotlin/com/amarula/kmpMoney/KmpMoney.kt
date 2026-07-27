@@ -36,8 +36,18 @@ data class KmpMoney(private val amount: BigDecimal, val currency: Currency) : Co
     }
 
     /**
-     * The amount rounded to [Currency.decimalPlaces] decimal places (half-ceiling) as a plain string,
-     * with no grouping separators.
+     * Subtracts [other] from this amount and returns the result.
+     *
+     * @throws IllegalArgumentException if [other] has a different currency.
+     */
+    fun subtract(other: KmpMoney): KmpMoney {
+        requireSameCurrency(other)
+        return KmpMoney(this.amount - other.amount, currency)
+    }
+
+    /**
+     * The amount rounded to [Currency.decimalPlaces] decimal places (half-away-from-zero) as a
+     * plain string, with no grouping separators.
      */
     val numberStrippedString: String
         get() {

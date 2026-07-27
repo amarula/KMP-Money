@@ -213,6 +213,31 @@ class KmpMoneyTest {
         }
     }
 
+    // ── subtract ──────────────────────────────────────────────────────────────
+
+    @Test
+    fun `subtract returns difference`() {
+        val a = KmpMoney.of("10.00", Currency.USD)
+        val b = KmpMoney.of("3.25", Currency.USD)
+        assertEquals("6.75", a.subtract(b).numberStrippedString)
+    }
+
+    @Test
+    fun `subtract with negative result`() {
+        assertEquals(
+            "-2.00",
+            KmpMoney.of("3.00", Currency.USD)
+                .subtract(KmpMoney.of("5.00", Currency.USD)).numberStrippedString
+        )
+    }
+
+    @Test
+    fun `subtract throws on currency mismatch`() {
+        assertFailsWith<IllegalArgumentException> {
+            KmpMoney.of("5.00", Currency.USD).subtract(KmpMoney.of("1.00", Currency.EUR))
+        }
+    }
+
     // ── toString ──────────────────────────────────────────────────────────────
 
     @Test
