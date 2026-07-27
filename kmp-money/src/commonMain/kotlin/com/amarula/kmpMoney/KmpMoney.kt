@@ -46,6 +46,20 @@ data class KmpMoney(private val amount: BigDecimal, val currency: Currency) : Co
     }
 
     /**
+     * Multiplies this amount by [factor] and returns the result.
+     *
+     * @param factor [BigDecimal] multiplier.
+     */
+    fun multiply(factor: BigDecimal): KmpMoney = KmpMoney(this.amount * factor, currency)
+
+    /**
+     * Multiplies this amount by [factor] and returns the result.
+     *
+     * @param factor Numeric multiplier; converted to [BigDecimal] via its string representation.
+     */
+    fun multiply(factor: Number): KmpMoney = multiply(BigDecimal.parseString(factor.toString()))
+
+    /**
      * The amount rounded to [Currency.decimalPlaces] decimal places (half-away-from-zero) as a
      * plain string, with no grouping separators.
      */
