@@ -1,0 +1,21 @@
+{
+  "comments": [
+    {
+      "unresolved": true,
+      "key": {
+        "uuid": "56c7238b_141093c6",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1039648
+      },
+      "writtenOn": "2026-09-17T06:02:27Z",
+      "side": 1,
+      "message": "I would rather split this change",
+      "revId": "42242cb518ce7b318ef47fcb6cbf7bc3093fb12d",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    }
+  ]
+}
