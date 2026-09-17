@@ -1,6 +1,23 @@
 {
   "comments": [
     {
+      "unresolved": false,
+      "key": {
+        "uuid": "86e9a962_64416baa",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 10
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1037987
+      },
+      "writtenOn": "2026-09-17T20:25:39Z",
+      "side": 1,
+      "message": "@ronnie.otieno@amarulasolutions.com can you fix the author.",
+      "revId": "f525eb33c4053579bf93f217e1b02d8044de69d0",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
       "unresolved": true,
       "key": {
         "uuid": "08d5b5de_8b08a295",
