@@ -878,6 +878,23 @@ class KmpMoneyTest {
         assertFalse(KmpMoney.of("-1.00", Currency.USD).isPositive())
     }
 
+    // ── isPositiveOrZero ──────────────────────────────────────────────────────
+
+    @Test
+    fun `isPositiveOrZero true for positive amount`() {
+        assertTrue(KmpMoney.of("0.01", Currency.USD).isPositiveOrZero())
+    }
+
+    @Test
+    fun `isPositiveOrZero true for zero`() {
+        assertTrue(KmpMoney.of("0", Currency.USD).isPositiveOrZero())
+    }
+
+    @Test
+    fun `isPositiveOrZero false for negative amount`() {
+        assertFalse(KmpMoney.of("-0.01", Currency.USD).isPositiveOrZero())
+    }
+
     // ── isNegative ────────────────────────────────────────────────────────────
 
     @Test
