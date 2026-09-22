@@ -341,6 +341,16 @@ data class KmpMoney(private val amount: BigDecimal, val currency: Currency) : Co
         return this.amount < other.amount
     }
 
+    /**
+     * Returns `true` if this amount is greater than or equal to [other].
+     *
+     * @throws IllegalArgumentException if [other] has a different currency.
+     */
+    fun isGreaterThanOrEqualTo(other: KmpMoney): Boolean {
+        requireSameCurrency(other)
+        return this.amount >= other.amount
+    }
+
     /** Returns `true` if [other] has the same currency as this amount. */
     fun isSameCurrency(other: KmpMoney): Boolean = this.currency == other.currency
 
