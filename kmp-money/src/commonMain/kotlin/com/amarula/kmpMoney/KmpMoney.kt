@@ -148,6 +148,38 @@ data class KmpMoney(private val amount: BigDecimal, val currency: Currency) : Co
     ): KmpMoney = divide(BigDecimal.parseString(divisor.toString()), roundingMode)
 
     /**
+     * Converts this amount to [targetCurrency] using a fixed exchange [rate], expressed as
+     * units of [targetCurrency] per one unit of this amount's currency. The result is rounded
+     * to [targetCurrency]'s decimal places (half-away-from-zero).
+     *
+     * This performs a bare arithmetic conversion only — it does not look up, cache, or validate
+     * exchange rates; callers supply [rate] from whatever rate source they use.
+     *
+     * Example: `KmpMoney.of("10.00", Currency.USD).convertTo(Currency.EUR, "0.92")` → `9.20 EUR`
+     *
+     * @param targetCurrency Currency to convert into.
+     * @param rate Exchange rate as target-currency units per one unit of this currency.
+     */
+    fun convertTo(targetCurrency: Currency, rate: BigDecimal): KmpMoney {
+        val converted = (amount * rate).roundToDigitPositionAfterDecimalPoint(
+            targetCurrency.decimalPlaces.toLong(),
+            RoundingMode.ROUND_HALF_AWAY_FROM_ZERO
+        )
+        return KmpMoney(converted, targetCurrency)
+    }
+
+    /**
+     * Converts this amount to [targetCurrency] using a fixed exchange [rate], expressed as
+     * units of [targetCurrency] per one unit of this amount's currency. The result is rounded
+     * to [targetCurrency]'s decimal places (half-away-from-zero).
+     *
+     * @param targetCurrency Currency to convert into.
+     * @param rate Exchange rate; converted to [BigDecimal] via its string representation.
+     */
+    fun convertTo(targetCurrency: Currency, rate: Number): KmpMoney =
+        convertTo(targetCurrency, BigDecimal.parseString(rate.toString()))
+
+    /**
      * Returns the portion of this amount that represents [rate] percent.
      *
      * Example: `100.00.percentage(10)` → `10.00`
