@@ -318,6 +318,9 @@ data class KmpMoney(private val amount: BigDecimal, val currency: Currency) : Co
     /** Returns `true` if the amount is strictly less than zero. */
     fun isNegative(): Boolean = amount < BigDecimal.ZERO
 
+    /** Returns `true` if the amount is zero or positive. */
+    fun isPositiveOrZero(): Boolean = amount >= BigDecimal.ZERO
+
     /**
      * Returns `true` if this amount is strictly greater than [other].
      *
