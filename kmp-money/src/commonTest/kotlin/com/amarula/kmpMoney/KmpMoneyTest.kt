@@ -328,6 +328,42 @@ class KmpMoneyTest {
         assertEquals("7.50", KmpMoney.of("7.50", Currency.USD).abs().numberStrippedString)
     }
 
+    // ── divideToIntegralValue ─────────────────────────────────────────────────
+
+    @Test
+    fun `divideToIntegralValue BigDecimal truncates towards zero`() {
+        assertEquals(
+            "3.00",
+            KmpMoney.of("10.00", Currency.USD)
+                .divideToIntegralValue(BigDecimal.parseString("3")).numberStrippedString
+        )
+    }
+
+    @Test
+    fun `divideToIntegralValue Number overload`() {
+        assertEquals(
+            "3.00",
+            KmpMoney.of("10.50", Currency.USD).divideToIntegralValue(3).numberStrippedString
+        )
+    }
+
+    @Test
+    fun `divideToIntegralValue truncates negative quotient towards zero`() {
+        assertEquals(
+            "-3.00",
+            KmpMoney.of("-10.50", Currency.USD).divideToIntegralValue(3).numberStrippedString
+        )
+    }
+
+    @Test
+    fun `divideToIntegralValue and remainder recompose the original amount`() {
+        val amount = KmpMoney.of("10.50", Currency.USD)
+        val divisor = BigDecimal.parseString("3")
+        val recomposed = amount.divideToIntegralValue(divisor).multiply(divisor)
+            .add(amount.remainder(divisor))
+        assertEquals(amount.numberStrippedString, recomposed.numberStrippedString)
+    }
+
     // ── remainder ─────────────────────────────────────────────────────────────
 
     @Test
