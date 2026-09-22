@@ -299,6 +299,36 @@ class KmpMoneyTest {
         assertEquals(Currency.EUR, KmpMoney.of("9.00", Currency.EUR).divide(3).currency)
     }
 
+    // ── convertTo ─────────────────────────────────────────────────────────────
+
+    @Test
+    fun `convertTo Number rate applies rate and switches currency`() {
+        val converted = KmpMoney.of("10.00", Currency.USD).convertTo(Currency.EUR, 0.92)
+        assertEquals(Currency.EUR, converted.currency)
+        assertEquals("9.20", converted.numberStrippedString)
+    }
+
+    @Test
+    fun `convertTo BigDecimal rate applies rate and switches currency`() {
+        val converted = KmpMoney.of("10.00", Currency.USD)
+            .convertTo(Currency.EUR, BigDecimal.parseString("0.92"))
+        assertEquals(Currency.EUR, converted.currency)
+        assertEquals("9.20", converted.numberStrippedString)
+    }
+
+    @Test
+    fun `convertTo rounds to target currency decimal places`() {
+        val converted = KmpMoney.of("10.00", Currency.USD).convertTo(Currency.JPY, 150.456)
+        assertEquals(Currency.JPY, converted.currency)
+        assertEquals("1505", converted.numberStrippedString)
+    }
+
+    @Test
+    fun `convertTo with rate of 1 preserves amount`() {
+        val converted = KmpMoney.of("42.00", Currency.USD).convertTo(Currency.USD, 1)
+        assertEquals("42.00", converted.numberStrippedString)
+    }
+
     // ── negate ────────────────────────────────────────────────────────────────
 
     @Test
