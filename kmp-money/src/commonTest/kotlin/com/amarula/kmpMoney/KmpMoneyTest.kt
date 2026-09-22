@@ -1008,6 +1008,36 @@ class KmpMoneyTest {
         }
     }
 
+    // ── isLessThanOrEqualTo ───────────────────────────────────────────────────
+
+    @Test
+    fun `isLessThanOrEqualTo true when less`() {
+        assertTrue(
+            KmpMoney.of("1.00", Currency.USD).isLessThanOrEqualTo(KmpMoney.of("2.00", Currency.USD))
+        )
+    }
+
+    @Test
+    fun `isLessThanOrEqualTo true for equal amounts`() {
+        assertTrue(
+            KmpMoney.of("1.00", Currency.USD).isLessThanOrEqualTo(KmpMoney.of("1.00", Currency.USD))
+        )
+    }
+
+    @Test
+    fun `isLessThanOrEqualTo false when greater`() {
+        assertFalse(
+            KmpMoney.of("2.00", Currency.USD).isLessThanOrEqualTo(KmpMoney.of("1.00", Currency.USD))
+        )
+    }
+
+    @Test
+    fun `isLessThanOrEqualTo throws on currency mismatch`() {
+        assertFailsWith<IllegalArgumentException> {
+            KmpMoney.of("1.00", Currency.USD).isLessThanOrEqualTo(KmpMoney.of("2.00", Currency.EUR))
+        }
+    }
+
     // ── isSameCurrency ────────────────────────────────────────────────────────
 
     @Test
