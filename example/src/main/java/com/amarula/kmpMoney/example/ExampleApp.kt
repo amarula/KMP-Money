@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.amarula.kmpMoney.example.examples.ArithmeticExample
 import com.amarula.kmpMoney.example.examples.BasicsExample
+import com.amarula.kmpMoney.example.examples.ComparisonExample
 import com.amarula.kmpMoney.example.examples.MultiplyDivideExample
 import com.amarula.kmpMoney.example.examples.PercentageExample
 
@@ -32,7 +33,8 @@ private val exampleCategories = listOf(
     ExampleCategory("Basics") { BasicsExample() },
     ExampleCategory("Arithmetic") { ArithmeticExample() },
     ExampleCategory("Multiply / Divide") { MultiplyDivideExample() },
-    ExampleCategory("Percentage") { PercentageExample() }
+    ExampleCategory("Percentage") { PercentageExample() },
+    ExampleCategory("Comparisons") { ComparisonExample() }
 )
 
 /**
