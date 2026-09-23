@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.amarula.kmpMoney.example.examples.AllocationExample
 import com.amarula.kmpMoney.example.examples.ArithmeticExample
 import com.amarula.kmpMoney.example.examples.BasicsExample
+import com.amarula.kmpMoney.example.examples.CompactFormatExample
 import com.amarula.kmpMoney.example.examples.ComparisonExample
 import com.amarula.kmpMoney.example.examples.ConversionExample
 import com.amarula.kmpMoney.example.examples.MultiplyDivideExample
@@ -40,7 +41,8 @@ private val exampleCategories = listOf(
     ExampleCategory("Comparisons") { ComparisonExample() },
     ExampleCategory("Rounding") { RoundingExample() },
     ExampleCategory("Allocation") { AllocationExample() },
-    ExampleCategory("Conversion") { ConversionExample() }
+    ExampleCategory("Conversion") { ConversionExample() },
+    ExampleCategory("Compact format") { CompactFormatExample() }
 )
 
 /**
