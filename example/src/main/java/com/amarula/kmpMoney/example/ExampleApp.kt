@@ -25,6 +25,7 @@ import com.amarula.kmpMoney.example.examples.BasicsExample
 import com.amarula.kmpMoney.example.examples.ComparisonExample
 import com.amarula.kmpMoney.example.examples.MultiplyDivideExample
 import com.amarula.kmpMoney.example.examples.PercentageExample
+import com.amarula.kmpMoney.example.examples.RoundingExample
 
 /** One selectable category button, and the example it reveals when picked. */
 private data class ExampleCategory(val title: String, val content: @Composable () -> Unit)
@@ -34,7 +35,8 @@ private val exampleCategories = listOf(
     ExampleCategory("Arithmetic") { ArithmeticExample() },
     ExampleCategory("Multiply / Divide") { MultiplyDivideExample() },
     ExampleCategory("Percentage") { PercentageExample() },
-    ExampleCategory("Comparisons") { ComparisonExample() }
+    ExampleCategory("Comparisons") { ComparisonExample() },
+    ExampleCategory("Rounding") { RoundingExample() }
 )
 
 /**
