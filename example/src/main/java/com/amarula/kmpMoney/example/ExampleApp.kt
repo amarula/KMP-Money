@@ -20,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.amarula.kmpMoney.example.examples.AllocationExample
 import com.amarula.kmpMoney.example.examples.ArithmeticExample
 import com.amarula.kmpMoney.example.examples.BasicsExample
 import com.amarula.kmpMoney.example.examples.ComparisonExample
@@ -36,7 +37,8 @@ private val exampleCategories = listOf(
     ExampleCategory("Multiply / Divide") { MultiplyDivideExample() },
     ExampleCategory("Percentage") { PercentageExample() },
     ExampleCategory("Comparisons") { ComparisonExample() },
-    ExampleCategory("Rounding") { RoundingExample() }
+    ExampleCategory("Rounding") { RoundingExample() },
+    ExampleCategory("Allocation") { AllocationExample() }
 )
 
 /**
