@@ -819,6 +819,65 @@ class KmpMoneyTest {
         )
     }
 
+    // ── roundToCashDenomination ──────────────────────────────────────────────
+
+    @Test
+    fun `roundToCashDenomination rounds up to nearest 0_05`() {
+        assertEquals(
+            "10.65",
+            KmpMoney.of("10.63", Currency.USD).roundToCashDenomination(0.05).numberStrippedString
+        )
+    }
+
+    @Test
+    fun `roundToCashDenomination rounds down to nearest 0_05`() {
+        assertEquals(
+            "10.60",
+            KmpMoney.of("10.62", Currency.USD).roundToCashDenomination(0.05).numberStrippedString
+        )
+    }
+
+    @Test
+    fun `roundToCashDenomination with FLOOR always rounds towards negative infinity`() {
+        assertEquals(
+            "10.60",
+            KmpMoney.of("10.64", Currency.USD)
+                .roundToCashDenomination(BigDecimal.parseString("0.05"), RoundingMode.FLOOR)
+                .numberStrippedString
+        )
+    }
+
+    @Test
+    fun `roundToCashDenomination supports coarse denominations on zero-decimal currencies`() {
+        assertEquals(
+            "1500",
+            KmpMoney.of("1490", Currency.JPY).roundToCashDenomination(50).numberStrippedString
+        )
+    }
+
+    @Test
+    fun `roundToCashDenomination preserves currency`() {
+        assertEquals(
+            Currency.EUR,
+            KmpMoney.of("1.03", Currency.EUR).roundToCashDenomination(0.05).currency
+        )
+    }
+
+    @Test
+    fun `roundToCashDenomination rounds negative amounts away from zero`() {
+        assertEquals(
+            "-10.65",
+            KmpMoney.of("-10.63", Currency.USD).roundToCashDenomination(0.05).numberStrippedString
+        )
+    }
+
+    @Test
+    fun `roundToCashDenomination throws on non-positive denomination`() {
+        assertFailsWith<IllegalArgumentException> {
+            KmpMoney.of("10.00", Currency.USD).roundToCashDenomination(0)
+        }
+    }
+
     // ── of(BigDecimal, Currency) ──────────────────────────────────────────────
 
     @Test

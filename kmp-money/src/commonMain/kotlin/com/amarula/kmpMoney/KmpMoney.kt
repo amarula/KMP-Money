@@ -359,6 +359,43 @@ data class KmpMoney(private val amount: BigDecimal, val currency: Currency) : Co
         return KmpMoney(rounded, currency)
     }
 
+    /**
+     * Rounds this amount to the nearest multiple of [denomination], for currencies where the
+     * smallest physical cash unit is coarser than the currency's decimal places (e.g. rounding to
+     * the nearest `0.05` when 1- and 2-cent coins aren't in circulation, or to the nearest `50` for
+     * a zero-decimal currency without small denominations).
+     *
+     * @param denomination The smallest cash unit to round to; must be positive.
+     * @param roundingMode Rounding strategy applied to the nearest multiple (default: half-away-from-zero).
+     * @throws IllegalArgumentException if [denomination] is not positive.
+     */
+    fun roundToCashDenomination(
+        denomination: BigDecimal,
+        roundingMode: RoundingMode = RoundingMode.ROUND_HALF_AWAY_FROM_ZERO
+    ): KmpMoney {
+        require(denomination > BigDecimal.ZERO) { "Denomination must be positive" }
+        val multiplier = amount.divide(
+            denomination,
+            DecimalMode(DECIMAL128_PRECISION, roundingMode)
+        )
+            .roundToDigitPositionAfterDecimalPoint(0, roundingMode)
+        return KmpMoney(multiplier * denomination, currency)
+    }
+
+    /**
+     * Rounds this amount to the nearest multiple of [denomination].
+     *
+     * @param denomination Numeric denomination; converted to [BigDecimal] via its string representation.
+     * @param roundingMode Rounding strategy applied to the nearest multiple (default: half-away-from-zero).
+     */
+    fun roundToCashDenomination(
+        denomination: Number,
+        roundingMode: RoundingMode = RoundingMode.ROUND_HALF_AWAY_FROM_ZERO
+    ): KmpMoney = roundToCashDenomination(
+        BigDecimal.parseString(denomination.toString()),
+        roundingMode
+    )
+
     /** Returns `true` if the amount is zero or negative. */
     fun isNegativeOrZero(): Boolean = amount <= BigDecimal.ZERO
 
