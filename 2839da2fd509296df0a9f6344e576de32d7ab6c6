@@ -22,6 +22,30 @@
       },
       "revId": "2839da2fd509296df0a9f6344e576de32d7ab6c6",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "6fb80459_428f0c98",
+        "filename": "kmp-money/src/commonMain/kotlin/com/amarula/kmpMoney/KmpMoney.kt",
+        "patchSetId": 11
+      },
+      "lineNbr": 368,
+      "author": {
+        "id": 1039648
+      },
+      "writtenOn": "2026-09-23T14:34:28Z",
+      "side": 1,
+      "message": "Done",
+      "parentUuid": "e9b023cf_a40774c1",
+      "range": {
+        "startLine": 368,
+        "startChar": 8,
+        "endLine": 368,
+        "endChar": 15
+      },
+      "revId": "2839da2fd509296df0a9f6344e576de32d7ab6c6",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
   ]
 }
