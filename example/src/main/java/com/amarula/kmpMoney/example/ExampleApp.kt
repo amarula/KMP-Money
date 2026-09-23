@@ -24,6 +24,7 @@ import com.amarula.kmpMoney.example.examples.AllocationExample
 import com.amarula.kmpMoney.example.examples.ArithmeticExample
 import com.amarula.kmpMoney.example.examples.BasicsExample
 import com.amarula.kmpMoney.example.examples.ComparisonExample
+import com.amarula.kmpMoney.example.examples.ConversionExample
 import com.amarula.kmpMoney.example.examples.MultiplyDivideExample
 import com.amarula.kmpMoney.example.examples.PercentageExample
 import com.amarula.kmpMoney.example.examples.RoundingExample
@@ -38,7 +39,8 @@ private val exampleCategories = listOf(
     ExampleCategory("Percentage") { PercentageExample() },
     ExampleCategory("Comparisons") { ComparisonExample() },
     ExampleCategory("Rounding") { RoundingExample() },
-    ExampleCategory("Allocation") { AllocationExample() }
+    ExampleCategory("Allocation") { AllocationExample() },
+    ExampleCategory("Conversion") { ConversionExample() }
 )
 
 /**
