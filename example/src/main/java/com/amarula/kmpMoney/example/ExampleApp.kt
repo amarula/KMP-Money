@@ -30,6 +30,7 @@ import com.amarula.kmpMoney.example.examples.ComparisonExample
 import com.amarula.kmpMoney.example.examples.ConversionExample
 import com.amarula.kmpMoney.example.examples.CurrencyMismatchExample
 import com.amarula.kmpMoney.example.examples.FactoryMethodsExample
+import com.amarula.kmpMoney.example.examples.FlowExtensionsExample
 import com.amarula.kmpMoney.example.examples.FullComparisonExample
 import com.amarula.kmpMoney.example.examples.IntegerDivisionExample
 import com.amarula.kmpMoney.example.examples.JsonSerializationExample
@@ -72,7 +73,8 @@ private val exampleCategories = listOf(
     ExampleCategory("Map round-trip") { MapRoundTripExample() },
     ExampleCategory("JSON serialization") { JsonSerializationExample() },
     ExampleCategory("Sorting") { SortingExample() },
-    ExampleCategory("sumMoneyOf") { SumMoneyOfExample() }
+    ExampleCategory("sumMoneyOf") { SumMoneyOfExample() },
+    ExampleCategory("Flow extensions") { FlowExtensionsExample() }
 )
 
 /**
