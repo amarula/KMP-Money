@@ -42,6 +42,7 @@ import com.amarula.kmpMoney.example.examples.PercentageExample
 import com.amarula.kmpMoney.example.examples.RawInteropExample
 import com.amarula.kmpMoney.example.examples.RoundingExample
 import com.amarula.kmpMoney.example.examples.SignAndZeroExample
+import com.amarula.kmpMoney.example.examples.SortingExample
 
 /** One selectable category button, and the example it reveals when picked. */
 private data class ExampleCategory(val title: String, val content: @Composable () -> Unit)
@@ -68,7 +69,8 @@ private val exampleCategories = listOf(
     ExampleCategory("Minor units") { MinorUnitsExample() },
     ExampleCategory("Factory methods") { FactoryMethodsExample() },
     ExampleCategory("Map round-trip") { MapRoundTripExample() },
-    ExampleCategory("JSON serialization") { JsonSerializationExample() }
+    ExampleCategory("JSON serialization") { JsonSerializationExample() },
+    ExampleCategory("Sorting") { SortingExample() }
 )
 
 /**
