@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import com.amarula.kmpMoney.example.examples.AllocationExample
 import com.amarula.kmpMoney.example.examples.ArithmeticExample
 import com.amarula.kmpMoney.example.examples.BasicsExample
+import com.amarula.kmpMoney.example.examples.ClampingExample
 import com.amarula.kmpMoney.example.examples.CollectionsExample
 import com.amarula.kmpMoney.example.examples.CompactFormatExample
 import com.amarula.kmpMoney.example.examples.ComparisonExample
@@ -48,7 +49,8 @@ private val exampleCategories = listOf(
     ExampleCategory("Compact format") { CompactFormatExample() },
     ExampleCategory("Collections") { CollectionsExample() },
     ExampleCategory("Sign & zero") { SignAndZeroExample() },
-    ExampleCategory("Full comparisons") { FullComparisonExample() }
+    ExampleCategory("Full comparisons") { FullComparisonExample() },
+    ExampleCategory("Clamping") { ClampingExample() }
 )
 
 /**
