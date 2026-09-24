@@ -27,6 +27,7 @@ import com.amarula.kmpMoney.example.examples.CollectionsExample
 import com.amarula.kmpMoney.example.examples.CompactFormatExample
 import com.amarula.kmpMoney.example.examples.ComparisonExample
 import com.amarula.kmpMoney.example.examples.ConversionExample
+import com.amarula.kmpMoney.example.examples.FullComparisonExample
 import com.amarula.kmpMoney.example.examples.MultiplyDivideExample
 import com.amarula.kmpMoney.example.examples.PercentageExample
 import com.amarula.kmpMoney.example.examples.RoundingExample
@@ -46,7 +47,8 @@ private val exampleCategories = listOf(
     ExampleCategory("Conversion") { ConversionExample() },
     ExampleCategory("Compact format") { CompactFormatExample() },
     ExampleCategory("Collections") { CollectionsExample() },
-    ExampleCategory("Sign & zero") { SignAndZeroExample() }
+    ExampleCategory("Sign & zero") { SignAndZeroExample() },
+    ExampleCategory("Full comparisons") { FullComparisonExample() }
 )
 
 /**
