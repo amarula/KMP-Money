@@ -29,6 +29,7 @@ import com.amarula.kmpMoney.example.examples.CompactFormatExample
 import com.amarula.kmpMoney.example.examples.ComparisonExample
 import com.amarula.kmpMoney.example.examples.ConversionExample
 import com.amarula.kmpMoney.example.examples.CurrencyMismatchExample
+import com.amarula.kmpMoney.example.examples.FactoryMethodsExample
 import com.amarula.kmpMoney.example.examples.FullComparisonExample
 import com.amarula.kmpMoney.example.examples.IntegerDivisionExample
 import com.amarula.kmpMoney.example.examples.MinorUnitsExample
@@ -62,7 +63,8 @@ private val exampleCategories = listOf(
     ExampleCategory("Operators") { OperatorsExample() },
     ExampleCategory("Integer division") { IntegerDivisionExample() },
     ExampleCategory("Raw & interop") { RawInteropExample() },
-    ExampleCategory("Minor units") { MinorUnitsExample() }
+    ExampleCategory("Minor units") { MinorUnitsExample() },
+    ExampleCategory("Factory methods") { FactoryMethodsExample() }
 )
 
 /**
