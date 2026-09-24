@@ -28,6 +28,7 @@ import com.amarula.kmpMoney.example.examples.CollectionsExample
 import com.amarula.kmpMoney.example.examples.CompactFormatExample
 import com.amarula.kmpMoney.example.examples.ComparisonExample
 import com.amarula.kmpMoney.example.examples.ConversionExample
+import com.amarula.kmpMoney.example.examples.CurrencyMismatchExample
 import com.amarula.kmpMoney.example.examples.FullComparisonExample
 import com.amarula.kmpMoney.example.examples.MultiplyDivideExample
 import com.amarula.kmpMoney.example.examples.PercentageExample
@@ -50,7 +51,8 @@ private val exampleCategories = listOf(
     ExampleCategory("Collections") { CollectionsExample() },
     ExampleCategory("Sign & zero") { SignAndZeroExample() },
     ExampleCategory("Full comparisons") { FullComparisonExample() },
-    ExampleCategory("Clamping") { ClampingExample() }
+    ExampleCategory("Clamping") { ClampingExample() },
+    ExampleCategory("Currency mismatch") { CurrencyMismatchExample() }
 )
 
 /**
