@@ -30,6 +30,7 @@ import com.amarula.kmpMoney.example.examples.ConversionExample
 import com.amarula.kmpMoney.example.examples.MultiplyDivideExample
 import com.amarula.kmpMoney.example.examples.PercentageExample
 import com.amarula.kmpMoney.example.examples.RoundingExample
+import com.amarula.kmpMoney.example.examples.SignAndZeroExample
 
 /** One selectable category button, and the example it reveals when picked. */
 private data class ExampleCategory(val title: String, val content: @Composable () -> Unit)
@@ -44,7 +45,8 @@ private val exampleCategories = listOf(
     ExampleCategory("Allocation") { AllocationExample() },
     ExampleCategory("Conversion") { ConversionExample() },
     ExampleCategory("Compact format") { CompactFormatExample() },
-    ExampleCategory("Collections") { CollectionsExample() }
+    ExampleCategory("Collections") { CollectionsExample() },
+    ExampleCategory("Sign & zero") { SignAndZeroExample() }
 )
 
 /**
