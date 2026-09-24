@@ -31,6 +31,7 @@ import com.amarula.kmpMoney.example.examples.ConversionExample
 import com.amarula.kmpMoney.example.examples.CurrencyMismatchExample
 import com.amarula.kmpMoney.example.examples.FullComparisonExample
 import com.amarula.kmpMoney.example.examples.MultiplyDivideExample
+import com.amarula.kmpMoney.example.examples.NegationAbsExample
 import com.amarula.kmpMoney.example.examples.PercentageExample
 import com.amarula.kmpMoney.example.examples.RoundingExample
 import com.amarula.kmpMoney.example.examples.SignAndZeroExample
@@ -52,7 +53,8 @@ private val exampleCategories = listOf(
     ExampleCategory("Sign & zero") { SignAndZeroExample() },
     ExampleCategory("Full comparisons") { FullComparisonExample() },
     ExampleCategory("Clamping") { ClampingExample() },
-    ExampleCategory("Currency mismatch") { CurrencyMismatchExample() }
+    ExampleCategory("Currency mismatch") { CurrencyMismatchExample() },
+    ExampleCategory("Negation & abs") { NegationAbsExample() }
 )
 
 /**
