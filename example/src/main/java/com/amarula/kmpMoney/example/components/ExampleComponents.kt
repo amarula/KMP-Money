@@ -35,15 +35,23 @@ fun ExampleCard(title: String, content: @Composable () -> Unit) {
     }
 }
 
-/** A single-line numeric input for an amount the example computes from. Starts empty. */
+/**
+ * A single-line input the example computes from. Starts empty. Defaults to a decimal keypad
+ * for amounts; pass [keyboardType] to override for non-amount inputs like currency codes.
+ */
 @Composable
-fun AmountField(label: String, value: String, onValueChange: (String) -> Unit) {
+fun AmountField(
+    label: String,
+    value: String,
+    keyboardType: KeyboardType = KeyboardType.Decimal,
+    onValueChange: (String) -> Unit
+) {
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
         label = { Text(label) },
         singleLine = true,
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
+        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
         modifier = Modifier.fillMaxWidth()
     )
 }

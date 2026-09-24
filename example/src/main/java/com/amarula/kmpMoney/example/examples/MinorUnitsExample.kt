@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.text.input.KeyboardType
 import com.amarula.kmpMoney.Currency
 import com.amarula.kmpMoney.KmpMoney
 import com.amarula.kmpMoney.example.components.AmountField
@@ -26,7 +27,11 @@ fun MinorUnitsExample() {
 
     ExampleCard(title = "Minor units") {
         AmountField("Amount (USD)", amountText) { amountText = it }
-        AmountField("Minor units, e.g. Stripe cents", minorUnitsText) { minorUnitsText = it }
+        AmountField(
+            "Minor units, e.g. Stripe cents",
+            minorUnitsText,
+            keyboardType = KeyboardType.Number
+        ) { minorUnitsText = it }
         CalculateButton {
             val amount = amountText.toKmpMoneyOrZero(Currency.USD)
             val minorUnits = minorUnitsText.toLongOrNull() ?: 0L

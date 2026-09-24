@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.text.input.KeyboardType
 import com.amarula.kmpMoney.Currency
 import com.amarula.kmpMoney.example.components.AmountField
 import com.amarula.kmpMoney.example.components.CalculateButton
@@ -28,7 +29,11 @@ fun CurrencyMetadataExample() {
     val scope = rememberCoroutineScope()
 
     ExampleCard(title = "Currency picker & metadata") {
-        AmountField("Currency code (e.g. USD, EUR, JPY)", codeText) { codeText = it }
+        AmountField(
+            "Currency code (e.g. USD, EUR, JPY)",
+            codeText,
+            keyboardType = KeyboardType.Text
+        ) { codeText = it }
         CalculateButton {
             val currency = Currency.fromName(codeText) ?: Currency.UNKNOWN
             flagUrlResult = currency.flagUrl

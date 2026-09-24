@@ -5,6 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.text.input.KeyboardType
 import com.amarula.kmpMoney.KmpMoney
 import com.amarula.kmpMoney.example.components.AmountField
 import com.amarula.kmpMoney.example.components.CalculateButton
@@ -28,7 +29,11 @@ fun FactoryMethodsExample() {
 
     ExampleCard(title = "More factory methods") {
         AmountField("Amount", amountText) { amountText = it }
-        AmountField("Currency code (e.g. USD, or unknown like XYZ)", codeText) { codeText = it }
+        AmountField(
+            "Currency code (e.g. USD, or unknown like XYZ)",
+            codeText,
+            keyboardType = KeyboardType.Text
+        ) { codeText = it }
         CalculateButton {
             val money = runCatching { KmpMoney.of(amountText, codeText) }
                 .getOrElse { KmpMoney.of("0", codeText) }
