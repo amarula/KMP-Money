@@ -31,6 +31,7 @@ import com.amarula.kmpMoney.example.examples.ConversionExample
 import com.amarula.kmpMoney.example.examples.CurrencyMismatchExample
 import com.amarula.kmpMoney.example.examples.FullComparisonExample
 import com.amarula.kmpMoney.example.examples.IntegerDivisionExample
+import com.amarula.kmpMoney.example.examples.MinorUnitsExample
 import com.amarula.kmpMoney.example.examples.MultiplyDivideExample
 import com.amarula.kmpMoney.example.examples.NegationAbsExample
 import com.amarula.kmpMoney.example.examples.OperatorsExample
@@ -60,7 +61,8 @@ private val exampleCategories = listOf(
     ExampleCategory("Negation & abs") { NegationAbsExample() },
     ExampleCategory("Operators") { OperatorsExample() },
     ExampleCategory("Integer division") { IntegerDivisionExample() },
-    ExampleCategory("Raw & interop") { RawInteropExample() }
+    ExampleCategory("Raw & interop") { RawInteropExample() },
+    ExampleCategory("Minor units") { MinorUnitsExample() }
 )
 
 /**
