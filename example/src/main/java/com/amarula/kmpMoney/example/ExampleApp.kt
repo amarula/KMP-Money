@@ -30,6 +30,7 @@ import com.amarula.kmpMoney.example.examples.ComparisonExample
 import com.amarula.kmpMoney.example.examples.ConversionExample
 import com.amarula.kmpMoney.example.examples.CurrencyMismatchExample
 import com.amarula.kmpMoney.example.examples.FullComparisonExample
+import com.amarula.kmpMoney.example.examples.IntegerDivisionExample
 import com.amarula.kmpMoney.example.examples.MultiplyDivideExample
 import com.amarula.kmpMoney.example.examples.NegationAbsExample
 import com.amarula.kmpMoney.example.examples.OperatorsExample
@@ -56,7 +57,8 @@ private val exampleCategories = listOf(
     ExampleCategory("Clamping") { ClampingExample() },
     ExampleCategory("Currency mismatch") { CurrencyMismatchExample() },
     ExampleCategory("Negation & abs") { NegationAbsExample() },
-    ExampleCategory("Operators") { OperatorsExample() }
+    ExampleCategory("Operators") { OperatorsExample() },
+    ExampleCategory("Integer division") { IntegerDivisionExample() }
 )
 
 /**
