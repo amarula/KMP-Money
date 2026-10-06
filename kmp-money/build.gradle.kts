@@ -9,7 +9,11 @@ plugins {
     alias(libs.plugins.compose.multiplatform)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.maven.publish)
 }
+
+group = "io.github.amarula"
+version = "0.1.0"
 
 kotlin {
     jvm()
@@ -72,6 +76,44 @@ kover {
             excludes {
                 packages("com.amarula.kmpMoney.resources")
             }
+        }
+    }
+}
+
+mavenPublishing {
+    publishToMavenCentral(automaticRelease = false)
+    signAllPublications()
+
+    coordinates(group.toString(), "kmp-money", version.toString())
+
+    pom {
+        name.set("KMP Money")
+        description.set(
+            "A Kotlin Multiplatform library for working with monetary amounts safely and precisely."
+        )
+        inceptionYear.set("2026")
+        url.set("https://github.com/amarula/KMP-Money")
+
+        licenses {
+            license {
+                name.set("The Apache License, Version 2.0")
+                url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
+                distribution.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
+            }
+        }
+
+        developers {
+            developer {
+                id.set("amarula")
+                name.set("Amarula Solutions")
+                url.set("https://github.com/amarula")
+            }
+        }
+
+        scm {
+            url.set("https://github.com/amarula/KMP-Money")
+            connection.set("scm:git:git://github.com/amarula/KMP-Money.git")
+            developerConnection.set("scm:git:ssh://git@github.com/amarula/KMP-Money.git")
         }
     }
 }
