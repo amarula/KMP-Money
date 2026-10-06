@@ -12,7 +12,7 @@ plugins {
     alias(libs.plugins.maven.publish)
 }
 
-group = "io.github.amarula"
+group = "com.github.amarula"
 version = "0.1.0"
 
 kotlin {

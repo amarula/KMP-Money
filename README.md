@@ -18,12 +18,22 @@ println(total.toMoneyString()) // "$ 21.69"
 
 ## Contents
 
+- [Installation](#installation)
 - [Why](#why)
 - [Quick start](#quick-start)
 - [Features](#features)
 - [Project structure](#project-structure)
 - [The example app](#the-example-app)
 - [Development](#development)
+- [License](#license)
+
+## Installation
+
+```kotlin
+dependencies {
+    implementation("com.github.amarula:kmp-money:0.1.0")
+}
+```
 
 ## Why
 
@@ -119,3 +129,7 @@ Run the example app on a connected device or emulator:
 ```bash
 ./gradlew :example:installDebug
 ```
+
+## License
+
+Apache License 2.0 -- see [LICENSE](LICENSE).
