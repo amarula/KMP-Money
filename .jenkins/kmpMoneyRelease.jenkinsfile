@@ -1,0 +1,113 @@
+#!groovy
+// Requires Jenkins credentials: maven-central-portal-token, kmp-money-gpg-signing-key,
+// kmp-money-gpg-signing-key-password
+@Library('ci_scripts')
+@Library('repo_jenkins_lib')
+
+String dslScript = """
+    pipelineJob("amarula/amarula-internal/amarulaLibrary/kmpMoneyRelease") {
+        description("KMP Money Release Job — publishes com.amarulasolutions:kmp-money to Maven Central")
+        keepDependencies(false)
+        definition {
+            cpsScm {
+                scm {
+                     git {
+                         remote {
+                             url("https://gerrithub.io/a/amarula/KMP-Money")
+                             credentials("gerrithub")
+                         }
+                         branch('refs/heads/main')
+                     }
+                }
+                scriptPath(".jenkins/kmpMoneyRelease.jenkinsfile")
+                lightweight()
+            }
+        }
+        disabled(false)
+        logRotator {
+            numToKeep(30)
+            daysToKeep(90)
+        }
+    }
+"""
+
+properties([
+    parameters([
+        string(
+            name: 'RELEASE_VERSION',
+            defaultValue: '0.1.0',
+            description: 'Version to publish as com.amarulasolutions:kmp-money:<version>'
+        ),
+        booleanParam(
+            name: 'AUTO_RELEASE',
+            defaultValue: true,
+            description: 'Auto-publish once Central Portal validation passes. Uncheck to leave the ' +
+                'deployment VALIDATED but pending manual release in the Central Portal UI.'
+        )
+    ])
+])
+
+node('android-build') {
+    jobDsl scriptText: dslScript, ignoreExisting: true
+
+    String releaseVersion = params.RELEASE_VERSION ?: '0.1.0'
+    Boolean autoRelease = params.AUTO_RELEASE == null ? true : params.AUTO_RELEASE
+
+    try {
+        stage('Build, sign & stage artifacts') {
+            withCredentials([
+                string(credentialsId: 'kmp-money-gpg-signing-key', variable: 'ORG_GRADLE_PROJECT_signingInMemoryKey'),
+                string(credentialsId: 'kmp-money-gpg-signing-key-password', variable: 'ORG_GRADLE_PROJECT_signingInMemoryKeyPassword')
+            ]) {
+                sh """#!/bin/bash -il
+                    ./gradlew :kmp-money:zipCentralBundle -PreleaseVersion=${releaseVersion} --stacktrace
+                """
+            }
+        }
+
+        String deploymentId
+        stage('Upload to Central Portal') {
+            withCredentials([string(credentialsId: 'maven-central-portal-token', variable: 'CENTRAL_TOKEN')]) {
+                String publishingType = autoRelease ? 'AUTOMATIC' : 'USER_MANAGED'
+                String bundleName = "com.amarulasolutions-kmp-money-${releaseVersion}"
+                deploymentId = sh(
+                    returnStdout: true,
+                    script: """
+                        curl --silent --show-error --fail \
+                            --header "Authorization: Bearer \$CENTRAL_TOKEN" \
+                            --form bundle=@kmp-money/build/central-bundle/central-bundle.zip \
+                            "https://central.sonatype.com/api/v1/publisher/upload?publishingType=${publishingType}&name=${bundleName}"
+                    """
+                ).trim()
+                echo "Central Portal deployment id: ${deploymentId}"
+            }
+        }
+
+        stage('Wait for Central Portal validation') {
+            withCredentials([string(credentialsId: 'maven-central-portal-token', variable: 'CENTRAL_TOKEN')]) {
+                timeout(time: 20, unit: 'MINUTES') {
+                    waitUntil {
+                        String statusJson = sh(
+                            returnStdout: true,
+                            script: """
+                                curl --silent --show-error --fail --request POST \
+                                    --header "Authorization: Bearer \$CENTRAL_TOKEN" \
+                                    "https://central.sonatype.com/api/v1/publisher/status?id=${deploymentId}"
+                            """
+                        ).trim()
+                        echo "Central Portal status: ${statusJson}"
+
+                        if (statusJson.contains('"deploymentState":"FAILED"')) {
+                            error("Central Portal deployment failed: ${statusJson}")
+                        }
+
+                        return statusJson.contains('"deploymentState":"VALIDATED"') ||
+                            statusJson.contains('"deploymentState":"PUBLISHED"')
+                    }
+                }
+            }
+        }
+    } finally {
+        cleanWs()
+    }
+}
