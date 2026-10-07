@@ -16,6 +16,24 @@
       "message": "I think that we should have:\n\n```\n\u003csettings\u003e\n  \u003cservers\u003e\n    \u003cserver\u003e\n      \u003cid\u003ecentral\u003c/id\u003e\n      \u003c!-- These reference environment variables injected by Jenkins --\u003e\n      \u003cusername\u003e${env.SONATYPE_USR}\u003c/username\u003e\n      \u003cpassword\u003e${env.SONATYPE_PSW}\u003c/password\u003e\n    \u003c/server\u003e\n  \u003c/servers\u003e\n\u003c/settings\u003e\n```\n\nsettings-ci.xml",
       "revId": "74c1666f8d7dd028fb161b092553e1add0291b8b",
       "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
+    },
+    {
+      "unresolved": false,
+      "key": {
+        "uuid": "277a1d8b_6725df5d",
+        "filename": "/PATCHSET_LEVEL",
+        "patchSetId": 1
+      },
+      "lineNbr": 0,
+      "author": {
+        "id": 1039646
+      },
+      "writtenOn": "2026-10-07T07:29:09Z",
+      "side": 1,
+      "message": "Thanks for the suggestion! I don\u0027t think this applies here though -- we publish via the com.vanniktech.maven.publish Gradle plugin (configured in kmp-money/build.gradle.kts), not a plain `mvn deploy`. That plugin talks to the Central Portal API directly and reads credentials from Gradle properties (mavenCentralUsername/mavenCentralPassword), which Jenkins supplies as ORG_GRADLE_PROJECT_* environment variables that Gradle maps automatically. There\u0027s no ~/.m2/settings.xml / Nexus staging flow in this pipeline, so a settings-ci.xml server block wouldn\u0027t be read by anything here. This is documented in PUBLISHING.md (section 3, \"Jenkins credentials\").",
+      "parentUuid": "b34e5cdf_44d50e39",
+      "revId": "74c1666f8d7dd028fb161b092553e1add0291b8b",
+      "serverId": "d5d70762-12d0-45a1-890d-524b12d3f735"
     }
   ]
 }
